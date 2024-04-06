@@ -1,0 +1,26 @@
+.header-design{
+    height: 44px;
+    /* background: #ededed; */
+    background: rgba(162, 162, 180, 0.458);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+}
+
+.header-design img{
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.Icons {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.moverticon{
+    margin-left: 1.5rem;
+    margin-top: 0.2rem;
+    /* padding: 8px; */
+}

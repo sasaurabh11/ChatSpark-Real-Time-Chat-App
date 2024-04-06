@@ -1,0 +1,14 @@
+.menu-section {
+    min-width: 450px;
+}
+
+.chat-section {
+    display: flex;
+}
+
+.empty-chat {
+    width: 73%;
+    min-width: 300px;
+    height: 100%;
+    border-left: 1px solid rgba(0, 0, 0, 0.14);
+}

@@ -1,0 +1,21 @@
+.Header{
+    height: 44px;
+    background: rgba(162, 162, 180, 0.458);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+}
+
+.Header img {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.icons {
+    margin-left: auto;
+    width: 12%;
+    display: flex;
+    justify-content: space-evenly;
+}
