@@ -1,16 +1,30 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './Messages.css'
 import Footer from './Footer'
 
 import { AccountContext} from '../../../ContextApi/AccountProvide'
 
 import {newMassage} from '../../../Service/api'
+import { getMessage } from '../../../Service/api'
+
+import MessageSingle from './MessageSingle'
 
 function Messages({person, conversation}) {
 
   const { account } = useContext(AccountContext)
 
   const [value, setValue] = useState('')
+  const [messages, setMessages] = useState([])
+  const [newMessageFlag, setNewMessageFlage] = useState(false)
+
+  useEffect(() => {
+    const getMessageDetails = async () => {
+      let data = await getMessage(conversation._id)
+      // console.log(data)
+      setMessages(data)
+    }
+    conversation._id && getMessageDetails();
+  },[person._id, conversation._id, newMessageFlag])
 
   const sendText =async (e) => {
     const code = e.keyCode || e.which;
@@ -28,17 +42,25 @@ function Messages({person, conversation}) {
       await newMassage(massage)
 
       setValue('')
+      setNewMessageFlage(prev => !prev)
     }
   }
 
   return (
     <>
         <div className='component'>
-            
+            {
+               messages && messages.map(message => (
+                  <div className='singlemessage'>
+                    <MessageSingle message={message} />
+                  </div>
+               ))
+            }
         </div>
         <Footer
           sendText={sendText}
           setValue={setValue}
+          value={value}
         />
     </>
   )

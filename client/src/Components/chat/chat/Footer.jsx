@@ -34,30 +34,31 @@ const InputField = styled(InputBase)`
 `;
 
 const ClipIcon = styled(AttachFile)`
-    transform: 'rotate(40deg)'
+    transform: 'rotate(40deg)',
+    cursor: 'pointer'
 `;
 
 
 const Footer = ({ sendText,value,  setValue, setFile, file, setImage }) => {
 
-    // useEffect(() => {
-    //     const getImage = async () => {
-    //         if (file) {
-    //             const data = new FormData();
-    //             data.append("name", file.name);
-    //             data.append("file", file);
+    useEffect(() => {
+        const getImage = async () => {
+            if (file) {
+                const data = new FormData();
+                data.append("name", file.name);
+                data.append("file", file);
 
-    //             const response = await uploadFile(data);
-    //             setImage(response.data);
-    //         }
-    //     }
-    //     getImage();
-    // }, [file])
+                const response = await uploadFile(data);
+                setImage(response.data);
+            }
+        }
+        getImage();
+    }, [file])
 
-    // const onFileChange = (e) => {
-    //     setValue(e.target.files[0].name);
-    //     setFile(e.target.files[0]);
-    // }
+    const onFileChange = (e) => {
+        setValue(e.target.files[0].name);
+        setFile(e.target.files[0]);
+    }
 
     return (
         <Container>
@@ -66,12 +67,12 @@ const Footer = ({ sendText,value,  setValue, setFile, file, setImage }) => {
             <label htmlFor="fileInput">
                 <ClipIcon />
             </label>
-            {/* <input
+            <input
                 type='file'
                 id="fileInput"
                 style={{ display: 'none' }}
                 onChange={(e) => onFileChange(e)}
-            /> */}
+            />
 
             <Search>
                 <InputField

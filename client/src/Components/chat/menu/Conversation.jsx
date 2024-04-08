@@ -35,6 +35,7 @@ function Conversation({ text }) {
             ))
         }
     </div>
+
   ) 
 }
 

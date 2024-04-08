@@ -46,3 +46,22 @@ export const newMassage = async(data) => {
         console.error('error while calling getconversation  api', error.message)
     }
 }
+
+export const getMessage = async(id) => {
+    try {
+        let response = await axios.get(`${url}/api/v1/user/message/get/${id}`);
+        // console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('error while calling getmessage api', error.message)
+    }
+}
+
+// export const signupLocal = async (data) => {
+//     try {
+//         await axios.post(`${url}/api/v1/user/signupLocal`, data);
+
+//     } catch (error) {
+//         console.error('error in addUser API', error.message)
+//     }
+// }

@@ -2,3 +2,7 @@
     height: 80vh;
     overflow-y: scroll;
 }
+
+.singlemessage {
+    padding: 1px 50px;
+}

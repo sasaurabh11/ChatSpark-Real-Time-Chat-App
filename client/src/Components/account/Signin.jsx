@@ -10,7 +10,7 @@ import { addUser } from '../../Service/api'
 
 function AuthForm() {
 
-  //use context used here
+  //use context used here 
 
   const {setAccount} = useContext(AccountContext)
 
@@ -40,21 +40,27 @@ function AuthForm() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (isLogin) {
       console.log('Logging in with:', { email, password });
+
     } else {
       console.log('Signing up with:', { email, password });
+      // const data = {email, password};
+      // await  signupLocal(data);
     }
   };
 
   return (
     <div className="auth-container">
       <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
+
           <input
             type="email"
             id="email"
@@ -62,7 +68,9 @@ function AuthForm() {
             onChange={handleEmailChange}
             required
           />
+
         </div>
+
         <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input
