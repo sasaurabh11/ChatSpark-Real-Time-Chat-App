@@ -12,7 +12,7 @@ function Conversation({ text }) {
 
     const [users, setUser] = useState([])
 
-    const { account } = useContext(AccountContext)
+    const { account, socket, setActiveUser } = useContext(AccountContext)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,6 +22,13 @@ function Conversation({ text }) {
         }
         fetchData()
     }, [text])
+
+    useEffect(() => {
+        socket.current.emit('addUsers', account)
+        socket.current.on('getUsers', users => {
+            setActiveUser(users)
+        })
+    }, [account])
 
   return (
     <div className='AllUsers'>

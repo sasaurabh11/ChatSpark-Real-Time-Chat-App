@@ -24,9 +24,9 @@ export const getMessage = async (req, res) => {
     try {
         // const messages = await Message.find({ conversationId: req.params.id})
         const messages = await Message.find({ conversationId: req.params.id }).populate('conversationId');
-        console.log(messages)
+        // console.log(messages)
         return res.status(200)
-        .json(messages)
+        .json(messages) 
 
         // const messages = await Message.find({ conversationId: req.params.id });
         // res.status(200).json(messages);

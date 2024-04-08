@@ -6,13 +6,13 @@ import './ChatHeader.css'
 
 function ChatHeader({person}) {
 
-    const { account } = useContext(AccountContext)
+    const { account, activeUser } = useContext(AccountContext)
   return (
     <div className='Header'>
         <img src={person.picture} alt="dp" />
         <div>
             <div style={{marginLeft:'12px'}}>{person.name}</div>
-            <div style={{marginLeft:'12px', fontSize: '12px', color:'rgba(0, 0, 0, 0.6'}}>Online Status</div>
+            <div style={{marginLeft:'12px', fontSize: '12px', color:'rgba(0, 0, 0, 0.6'}}> {activeUser?.find(user => user.sub === person.sub) ? 'Online' : 'Offline'} </div>
         </div>
         <div className='icons'>
             <Search/>

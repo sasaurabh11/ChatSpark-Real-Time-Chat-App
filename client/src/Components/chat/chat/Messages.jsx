@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import './Messages.css'
 import Footer from './Footer'
 
@@ -11,11 +11,35 @@ import MessageSingle from './MessageSingle'
 
 function Messages({person, conversation}) {
 
-  const { account } = useContext(AccountContext)
+  const { account, socket, newMessageFlag, setNewMessageFlage } = useContext(AccountContext)
 
   const [value, setValue] = useState('')
   const [messages, setMessages] = useState([])
-  const [newMessageFlag, setNewMessageFlage] = useState(false)
+  const [image, setImage] = useState('')
+  const [incomingMessage, setIncomingMessage] = useState(null)
+
+  const [file, setFile] = useState(false)
+
+  const scrollRef = useRef()
+
+  useEffect(() => {
+    socket.current.on('getMessage', data => {
+      setIncomingMessage({
+        ...data,
+        createdAt: Date.now()
+      })
+    })
+  })
+
+  useEffect(() => {
+      incomingMessage && conversation?.members?.includes(incomingMessage.senderId) && 
+          setMessages((prev) => [...prev, incomingMessage]);
+      
+  }, [incomingMessage, conversation]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({transition : 'smooth'})
+  })
 
   useEffect(() => {
     const getMessageDetails = async () => {
@@ -29,19 +53,36 @@ function Messages({person, conversation}) {
   const sendText =async (e) => {
     const code = e.keyCode || e.which;
     if(code === 13) {
-      let massage = {
-        senderId: account.sub,
-        receiverId: person.sub,
-        conversationId: conversation._id,
-        type: 'text',
-        text: value
+      let massage = {}
+
+      if(!file) {
+
+        massage = {
+          senderId: account.sub,
+          receiverId: person.sub,
+          conversationId: conversation._id,
+          type: 'text',
+          text: value
+        }
+      } else {
+        massage = {
+          senderId: account.sub,
+          receiverId: person.sub,
+          conversationId: conversation._id,
+          type: 'file',
+          text: image
+        }
       }
 
-      console.log(massage)
+      // console.log(massage)
+
+      socket.current.emit('sendMessage', massage)
 
       await newMassage(massage)
 
       setValue('')
+      setFile('')
+      setImage('') 
       setNewMessageFlage(prev => !prev)
     }
   }
@@ -51,7 +92,7 @@ function Messages({person, conversation}) {
         <div className='component'>
             {
                messages && messages.map(message => (
-                  <div className='singlemessage'>
+                  <div className='singlemessage' ref={scrollRef}>
                     <MessageSingle message={message} />
                   </div>
                ))
@@ -61,6 +102,7 @@ function Messages({person, conversation}) {
           sendText={sendText}
           setValue={setValue}
           value={value}
+          setImage={setImage}
         />
     </>
   )

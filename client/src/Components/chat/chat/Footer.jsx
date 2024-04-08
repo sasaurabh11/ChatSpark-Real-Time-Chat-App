@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { EmojiEmotions, AttachFile, Mic } from '@mui/icons-material';
 import { Box, styled, InputBase } from '@mui/material';
 
-// import { uploadFile } from '../../../service/api';
+import {uploadFile} from '../../../Service/api'
 
 const Container = styled(Box)`
     height: 55px;
@@ -70,7 +70,7 @@ const Footer = ({ sendText,value,  setValue, setFile, file, setImage }) => {
             <input
                 type='file'
                 id="fileInput"
-                style={{ display: 'none' }}
+                style={{ display: 'none'}}
                 onChange={(e) => onFileChange(e)}
             />
 

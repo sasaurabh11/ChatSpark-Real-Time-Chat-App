@@ -5,6 +5,10 @@ import { newConversation, getconversations } from "../controllers/conversation.c
 
 import { newMessage, getMessage } from '../controllers/message.controller.js'
 
+import { uploadFile } from "../controllers/file.controller.js";
+
+import { uploadmiddleware } from "../middlewares/file.middleware.js";
+
 const router = Router()
 
 router.route("/postuser").post(addUser)
@@ -17,5 +21,7 @@ router.route("/conversation/get").post(getconversations)
 
 router.route('/message/add').post(newMessage)
 router.route('/message/get/:id').get(getMessage);
+
+router.route('/file/upload').post(uploadmiddleware.single("file"), uploadFile);
 
 export default router

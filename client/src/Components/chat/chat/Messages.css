@@ -1,6 +1,10 @@
 .component{
     height: 80vh;
     overflow-y: scroll;
+    background-image: url('../../../assets/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%; 
 }
 
 .singlemessage {

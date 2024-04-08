@@ -57,6 +57,14 @@ export const getMessage = async(id) => {
     }
 }
 
+export const uploadFile = async (data) => {
+    try {
+        return await axios.post(`${url}/api/v1/user/file/upload`, data)
+    } catch (error) {
+        console.error('error while calling uploadFile  api', error.message)
+    }
+}
+
 // export const signupLocal = async (data) => {
 //     try {
 //         await axios.post(`${url}/api/v1/user/signupLocal`, data);
