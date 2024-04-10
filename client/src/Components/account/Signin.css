@@ -1,7 +1,7 @@
 .auth-container {
     max-width: 400px;
     /* margin: 0 auto; */
-    margin-top: 10%;
+    margin-top: 3rem;
     margin-left: 25%;
     padding: 20px;
     border: 1px solid #ccc;
@@ -12,7 +12,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 70%;
+    height: 81%;
     /* width: 20rem; */
   }
   
@@ -26,7 +26,8 @@
   }
   
   input[type='email'],
-  input[type='password'] {
+  input[type='password'],
+  input[type='text'] {
     width: 20rem;
     padding: 10px;
     border: 1px solid #ccc;

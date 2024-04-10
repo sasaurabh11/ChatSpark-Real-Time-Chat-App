@@ -22,6 +22,7 @@ function Chatbox() {
   const {person} = useContext(AccountContext)
 
   return (
+    // <>
     <Dialog
         open = {true}
         PaperProps={{sx : dialogStyle}}
@@ -35,13 +36,14 @@ function Chatbox() {
               
             </div>
 
-            <div className='empty-chat'>
+            {/* <div className='empty-chat'>
 
                 {Object.keys(person).length ? <ChatUser/> : <Emptychat/>}
-            </div>
+            </div> */}
 
         </div>
     </Dialog>
+    // </>
   )
 }
 

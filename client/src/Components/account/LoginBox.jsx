@@ -10,7 +10,7 @@ const dialogStyle = {
     boxShadow: 'none',
     overflow: 'hidden',
     backgroundColor: '#e6f2ff'
-}
+} 
 
 function LoginBox() {
   return (

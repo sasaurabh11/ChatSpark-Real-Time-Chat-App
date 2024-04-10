@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatIcon from '@mui/icons-material/Chat';
 
 import { useContext } from 'react';
@@ -9,19 +9,32 @@ import InfoDrawer from '../../drawer/InfoDrawer';
 import './Header.css'
 
 function Header() {
-  const { account } = useContext(AccountContext);
+  const { account,  localAccount} = useContext(AccountContext);
 
   const [drawer, setDrawer] = useState(false);
 
   const handleDrawer = () => {
-    setDrawer(!drawer)
+    setDrawer(!drawer) 
   }
+
+  const profilePicture = account?.picture || localAccount?.profilePhoto;
+
+  useEffect(() => {
+    const fetchDataofLocalAccount = async () => {
+        let resopnse = await getInfoLocalAccount();
+        // let filterData = resopnse.filter(user => user.name.toLowerCase().includes(text.toLowerCase()))
+        // setUser(filterData)
+    }
+    fetchDataofLocalAccount()
+}, [text])
 
   return (
     <>
       <div className='header-design'>
-        {/* dp correct karna padega */}
-        <img src={account.picture} alt="dp" onClick={handleDrawer}/>
+
+        {profilePicture && ( 
+          <img src={profilePicture} alt="dp" onClick={handleDrawer} />
+        )}
 
         <div className='Icons'>
           <ChatIcon/>

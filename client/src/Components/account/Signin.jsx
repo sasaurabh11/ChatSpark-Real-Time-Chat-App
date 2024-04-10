@@ -6,18 +6,18 @@ import { jwtDecode } from "jwt-decode";
 import { useContext } from 'react';
 import { AccountContext } from '../../ContextApi/AccountProvide';
 
-import { addUser } from '../../Service/api'
+import { addUser, signupLocal } from '../../Service/api'
 
 function AuthForm() {
 
   //use context used here 
 
-  const {setAccount} = useContext(AccountContext)
+  const {setAccount, setLocalAccount, localAccount} = useContext(AccountContext)
 
   const onLoginSuccess = async (response) => {
     // console.log('Google login successful:', response);
     const decodedmassage = jwtDecode(response.credential)
-    // console.log(decodedmassage)
+    console.log(decodedmassage)
     
     setAccount(decodedmassage)
     await addUser(decodedmassage)
@@ -28,9 +28,11 @@ function AuthForm() {
     // Handle error occurred during Google login
   };
 
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [isLogin, setIsLogin] = useState(false); // here I have to change in true
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -40,6 +42,22 @@ function AuthForm() {
     setPassword(event.target.value);
   };
 
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleProfilePhotoChange = (event) => {
+    // setProfilePhoto(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setProfilePhoto(reader.result); // Store base64 string in state
+      };
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -47,9 +65,21 @@ function AuthForm() {
       console.log('Logging in with:', { email, password });
 
     } else {
-      console.log('Signing up with:', { email, password });
-      // const data = {email, password};
-      // await  signupLocal(data);
+      console.log('Signing up with:', {name,  email, password, profilePhoto });
+      // const data = {name, email, password, profilePhoto};
+      
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('password', password);
+      // formData.append('profilePhoto', profilePhoto);
+      if (profilePhoto) {
+        formData.append('profilePhoto', profilePhoto);
+      }
+      
+      setLocalAccount(formData)  //I have to manage here data for useContext
+      await  signupLocal(formData);
+      // console.log('Signing up with:', localAccount.name);
     }
   };
 
@@ -58,6 +88,19 @@ function AuthForm() {
       <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
 
       <form onSubmit={handleSubmit}>
+         {!isLogin && (
+            <div className="form-group">
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={handleNameChange}
+                required
+              />
+            </div>
+          )}
+
         <div className="form-group">
           <label htmlFor="email">Email:</label>
 
@@ -81,6 +124,20 @@ function AuthForm() {
             required
           />
         </div>
+
+        {!isLogin && (
+          <div className="form-group">
+            <label htmlFor="dp">Profile Photo:</label>
+            <input
+              type="file"
+              id="dp"
+              accept=".jpg"
+              onChange={handleProfilePhotoChange}
+            />
+          </div>
+        )}
+
+
         <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
       </form>
 

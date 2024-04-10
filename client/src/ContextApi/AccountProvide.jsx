@@ -10,6 +10,9 @@ const AccountProvider = ({children}) => {
     const [activeUser, setActiveUser] = useState([])
     const [newMessageFlag, setNewMessageFlage] = useState(false)
 
+    const [localAccount, setLocalAccount] = useState();
+      
+
     const socket = useRef()
 
     useEffect(() => {
@@ -20,6 +23,7 @@ const AccountProvider = ({children}) => {
         <AccountContext.Provider
             value={{
                 account, setAccount,
+                localAccount, setLocalAccount,
                 person, setPerson,
                 newMessageFlag, setNewMessageFlage,
                 socket,

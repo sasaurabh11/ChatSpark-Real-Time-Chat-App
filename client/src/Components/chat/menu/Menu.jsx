@@ -10,8 +10,8 @@ function Menu() {
   return (
     <>
         <Header/> 
-        <Search setText = {setText} />
-        <Conversation text = {text} />
+        {/* <Search setText = {setText} /> */}
+        {/* <Conversation text = {text} /> */}
     </>
   )
 }

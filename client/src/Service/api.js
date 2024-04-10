@@ -65,11 +65,27 @@ export const uploadFile = async (data) => {
     }
 }
 
-// export const signupLocal = async (data) => {
-//     try {
-//         await axios.post(`${url}/api/v1/user/signupLocal`, data);
+export const signupLocal = async (formData) => {
+    try {
+        const response = await axios.post(`${url}/api/v1/user/signuplocal`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+        });
 
-//     } catch (error) {
-//         console.error('error in addUser API', error.message)
-//     }
-// }
+        console.log('Signup response:', response.data);
+
+    } catch (error) {
+        console.error('error in signUpLocal API', error.message)
+    }
+}
+
+export const getInfoLocalAccount = async () => {
+    try {
+        let response = await axios.get(`${url}/api/v1/user/getUserLocal`);
+        // console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('error while calling getInfoLocalAccount api', error.message)
+    }
+}

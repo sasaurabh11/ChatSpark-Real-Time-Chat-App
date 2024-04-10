@@ -14,25 +14,26 @@ const LoginHeader = styled(AppBar) `
 const ChatHeader = styled(AppBar) `
     height: 130px;
     background-color: #e3c8a1;
-`
+` 
 
 function Messenger() {
-  const { account } = useContext(AccountContext);
+  const { account, localAccount } = useContext(AccountContext);
 
   return (
     // yaha pe check karke chatbox ko chalana hai ki user login hai ya nahi
     // context ki help se check karna hai
     <>
       {
-          account ? 
+          account || localAccount ? 
           
               <div className="login-section">
-                <ChatHeader> 
+                  <ChatHeader> 
                       <Toolbar>
 
                       </Toolbar>
                   </ChatHeader>
-                <Chatbox /> 
+
+                  <Chatbox /> 
               </div>
           
           :
