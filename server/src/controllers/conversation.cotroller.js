@@ -3,7 +3,7 @@ import { Conversation } from "../model/conversation.model.js"
 
 export const newConversation = async (req, res) => {
     try {
-        
+          
         const senderId = req.body.senderId;
         const receverId = req.body.receverId;
 
@@ -25,7 +25,7 @@ export const newConversation = async (req, res) => {
 
     } catch (error) {
         return res.status(500)
-        .json('Error in creatin new conversation', error.message)
+        .json('Error in creating new conversation', error.message)
     }
 }
 
@@ -40,6 +40,7 @@ export const getconversations = async (req, res) => {
 
         return res.status(200)
         .json(conversationobject)
+        
     } catch (error) {
         return res.status(500)
         .json(error.message)

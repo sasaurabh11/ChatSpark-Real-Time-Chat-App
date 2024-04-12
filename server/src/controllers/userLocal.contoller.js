@@ -58,23 +58,89 @@ const signupLocal = async (req, res) => {
         //     return res.status(500)
         //     .json('something went wrong in Local user creation')
         // }
+
+        const userData = {
+            _id: userlocalcheck._id, // MongoDB _id
+            name: userlocalcheck.name,
+            email: userlocalcheck.email,
+            profilePhoto: userlocalcheck.profilePhoto
+        };
     
-        return res.status(201).json(
-            'user created successfully'
-        )
+        return res.status(201).json({
+            message: 'User created successfully',
+            user: userData
+        })
     } catch (error) {
         return res.status(500)
-        .json('error in signup local')
+        .json('error in signup local server')
     }
 
 }
 
-const getuserlocal = async (req, res) => {
+const loginUserLocal = async (req, res) => {
     try {
-        
+        const {email, password} = req.body
+
+        // console.log(email)
+
+        if(!email) {
+            return res.status(400)
+            .json('email is required')
+        }
+
+        const user = await Userlocal.findOne({ email: email })
+
+        if(!user) {
+            return res.status(400)
+            .json('user not exist create new account')
+        }
+
+        // const isValidPassword = await user.isPasswordCorrect(password)
+
+        // if(!isValidPassword) {
+        //     throw new ApiError(401, "Invalid User Credentials")
+        // }
+
+        if(password !== user.password) {
+            return res.status(401)
+            .json('Invalid User credentials')
+        }
+
+        // const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
+
+        // const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+        // //frontend se koi modify nahi kar payega
+        const options = {
+            httpOnly : true,
+            secure : true
+        }
+
+        // //yaha return me problem aa sakta hai
+        return res
+        .status(200)
+        .json(
+            {
+                message : "user login successfully",
+                user : user
+            }
+        )
     } catch (error) {
         
     }
 }
 
-export {signupLocal}
+const getUserLocalController = async (req, res) => {
+    try {
+        const allUsers = await Userlocal.find({})
+        
+        return res.status(200)
+        .json(allUsers)
+
+    } catch (error) {
+        console.error('Error occurred while getUser from database user:', error)
+        return res.status(500).json({ error: 'Internal server error' })
+    }
+}
+
+export {signupLocal, loginUserLocal, getUserLocalController}

@@ -20,7 +20,7 @@ export const newMessage = async (req, res) => {
     }
 }   
 
-export const getMessage = async (req, res) => {
+export const getMessage = async (req, res) => { 
     try {
         // const messages = await Message.find({ conversationId: req.params.id})
         const messages = await Message.find({ conversationId: req.params.id }).populate('conversationId');

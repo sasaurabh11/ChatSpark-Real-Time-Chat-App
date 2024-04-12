@@ -9,7 +9,7 @@ import { uploadFile } from "../controllers/file.controller.js";
 
 import { uploadmiddleware } from "../middlewares/file.middleware.js";
 
-import { signupLocal, getuserlocal } from "../controllers/userLocal.contoller.js";
+import { signupLocal, loginUserLocal, getUserLocalController } from "../controllers/userLocal.contoller.js";
 
 const router = Router()
 
@@ -19,12 +19,13 @@ router.route('/getuser').get(getUser)
 router.route('/signuplocal').post(
     uploadmiddleware.single('profilePhoto'),
     signupLocal)
-router.route('/getUserLocal').get(getuserlocal)
+router.route('/loginlocal').post(loginUserLocal)
+router.route('/getalluserlocal').get(getUserLocalController)
 
 router.route("/conversation/add").post(newConversation)
 router.route("/conversation/get").post(getconversations)
 
-router.route('/message/add').post(newMessage)
+router.route('/message/add').post(newMessage) 
 router.route('/message/get/:id').get(getMessage);
 
 router.route('/file/upload').post(uploadmiddleware.single("file"), uploadFile);
