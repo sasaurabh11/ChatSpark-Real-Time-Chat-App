@@ -16,8 +16,8 @@ const io = new Server(port, {
 let users = [];
 
 const addUser = (userData, socketId) => {
-    // console.log(users.given_name)
-    !users.some(user => user.sub === userData.sub) && users.push({ ...userData, socketId });
+    console.log("user in socket", userData)
+    !users.some(user => ((user.sub === userData.sub) || (user._id === userData._id))) && users.push({ ...userData, socketId });
 }
 
 const removeUser = (socketId) => {
@@ -25,7 +25,7 @@ const removeUser = (socketId) => {
 }
 
 const getUser = (userId) => {
-    return users.find(user => user.sub === userId);
+    return users.find(user => ((user.sub === userId) || (user._id === userId)));
 }
 
 io.on('connection', (socket) => {
