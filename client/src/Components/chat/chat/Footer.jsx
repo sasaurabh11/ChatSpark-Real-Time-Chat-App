@@ -39,7 +39,7 @@ const ClipIcon = styled(AttachFile)`
 `;
 
 
-const Footer = ({ sendText,value,  setValue, setFile, file, setImage }) => {
+const Footer = ({ sendText, value,  setValue, setFile, file, setImage }) => {
 
     useEffect(() => {
         const getImage = async () => {

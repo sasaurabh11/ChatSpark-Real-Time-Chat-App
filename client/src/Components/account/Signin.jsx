@@ -6,12 +6,9 @@ import { jwtDecode } from "jwt-decode";
 import { useContext } from 'react';
 import { AccountContext } from '../../ContextApi/AccountProvide';
 
-import { addUser, signupLocal } from '../../Service/api'
+import { addUser, signupLocal, loginLocal } from '../../Service/api'
 
 function AuthForm() {
-
-  //use context used here 
-
   const {setAccount, setLocalAccount, localAccount} = useContext(AccountContext)
 
   const onLoginSuccess = async (response) => {
@@ -32,7 +29,7 @@ function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [isLogin, setIsLogin] = useState(false); // here I have to change in true
+  const [isLogin, setIsLogin] = useState(true);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -47,15 +44,7 @@ function AuthForm() {
   };
 
   const handleProfilePhotoChange = (event) => {
-    // setProfilePhoto(event.target.files[0]);
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setProfilePhoto(reader.result); // Store base64 string in state
-      };
-    }
+    setProfilePhoto(event.target.files[0]);
   };
 
   const handleSubmit = async (event) => {
@@ -63,23 +52,28 @@ function AuthForm() {
 
     if (isLogin) {
       console.log('Logging in with:', { email, password });
+      const data = {email, password};
+
+      const responseloginLocal = await loginLocal(data)
+      setLocalAccount(responseloginLocal.user)
+
+      console.log(responseloginLocal)
 
     } else {
       console.log('Signing up with:', {name,  email, password, profilePhoto });
-      // const data = {name, email, password, profilePhoto};
       
       const formData = new FormData();
       formData.append('name', name);
       formData.append('email', email);
       formData.append('password', password);
-      // formData.append('profilePhoto', profilePhoto);
       if (profilePhoto) {
         formData.append('profilePhoto', profilePhoto);
       }
       
-      setLocalAccount(formData)  //I have to manage here data for useContext
-      await  signupLocal(formData);
-      // console.log('Signing up with:', localAccount.name);
+      const responseLocal = await signupLocal(formData);
+      setLocalAccount(responseLocal.user)
+
+      console.log('signed up with user : ' , responseLocal)
     }
   };
 

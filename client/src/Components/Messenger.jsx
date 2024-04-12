@@ -35,7 +35,6 @@ function Messenger() {
 
                   <Chatbox /> 
               </div>
-          
           :
 
               <div className="login-section">

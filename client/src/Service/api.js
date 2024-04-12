@@ -23,7 +23,7 @@ export const getUser = async() => {
 
 export const setConversation = async (data) => {
     try {
-        await axios.post(`${url}/api/v1/user/conversation/add`, data);
+        await axios.post(`${url}/api/v1/user/conversation/add`, data); 
     } catch (error) {
         console.error('error while calling set conversation  api', error.message)
     }
@@ -41,7 +41,7 @@ export const getConversation = async(data) => {
 export const newMassage = async(data) => {
     try {
         await axios.post(`${url}/api/v1/user/message/add`, data)
-
+ 
     } catch (error) {
         console.error('error while calling getconversation  api', error.message)
     }
@@ -72,20 +72,31 @@ export const signupLocal = async (formData) => {
               'Content-Type': 'multipart/form-data'
             }
         });
-
+        
         console.log('Signup response:', response.data);
+        return response.data;
 
     } catch (error) {
         console.error('error in signUpLocal API', error.message)
     }
 }
 
-export const getInfoLocalAccount = async () => {
+export const loginLocal = async (data) => {
     try {
-        let response = await axios.get(`${url}/api/v1/user/getUserLocal`);
-        // console.log(response)
+        let response = await axios.post(`${url}/api/v1/user/loginlocal`, data);
+        // console.log(response.data)
         return response.data;
     } catch (error) {
-        console.error('error while calling getInfoLocalAccount api', error.message)
+        console.error('error while calling getuser api', error.message)
+    }
+}
+
+export const getInfoLocalAccount = async () => {
+    try {
+        let response = await axios.get(`${url}/api/v1/user/getalluserlocal`);
+        console.log(response.data)
+        return response.data;
+    } catch (error) {
+        console.error('error while calling getuser api', error.message)
     }
 }

@@ -39,16 +39,19 @@ const DescriptionContainer = styled(Box)`
 `;
 
 const Profile = () => {
-    const { account } = useContext(AccountContext);
+    const { account, localAccount } = useContext(AccountContext);
+
+    const profilePicture = account?.picture || localAccount?.profilePhoto;
+    const profileName = account?.name || localAccount?.name;
 
     return (
         <>
             <ImageContainer>
-                <Image src={account.picture} alt="displaypicture" />
+                <Image src={profilePicture} alt="displaypicture" />
             </ImageContainer>
             <BoxWrapper>
                 <Typography>Your name</Typography>
-                <Typography>{account.name}</Typography>
+                <Typography>{profileName}</Typography>
             </BoxWrapper>
             <DescriptionContainer>
                 <Typography>

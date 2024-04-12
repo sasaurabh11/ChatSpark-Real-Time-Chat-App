@@ -6,22 +6,25 @@ import { AccountContext } from '../../../ContextApi/AccountProvide'
 import { getConversation } from '../../../Service/api'
 
 function ChatUser() {
-  const { person, account } = useContext(AccountContext)
+  const { person, account, localAccount } = useContext(AccountContext)
 
   const [conversation, setConversation] = useState({})
 
   useEffect(() => {
     const getConversationDetails = async () => {
-      let data = await getConversation({senderId : account.sub, receiverId : person.sub})
-      // console.log(data)
-      setConversation(data)
+        const recieveid = person.sub || person._id 
+        const sendid = localAccount?._id || account?.sub
+
+        let data = await getConversation({senderId : sendid, receiverId : recieveid})
+        // console.log(data)
+        setConversation(data) 
     }
 
     getConversationDetails()
-  }, [person.sub])
+  }, [person.sub, person._id])
 
   return (
-    <>
+    <> 
       <ChatHeader person = {person} />
       <Messages person = {person} conversation={conversation}/>
     </>

@@ -9,10 +9,8 @@ const AccountProvider = ({children}) => {
     const [person, setPerson] = useState({})
     const [activeUser, setActiveUser] = useState([])
     const [newMessageFlag, setNewMessageFlage] = useState(false)
-
     const [localAccount, setLocalAccount] = useState();
       
-
     const socket = useRef()
 
     useEffect(() => {

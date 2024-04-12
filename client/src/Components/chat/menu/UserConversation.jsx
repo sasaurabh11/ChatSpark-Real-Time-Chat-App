@@ -22,39 +22,51 @@ const Text = styled(Typography)`
 
 function UserConversation({user}) {
 
-  const { setPerson, account, newMessageFlag } = useContext(AccountContext)
+  const { setPerson, account, newMessageFlag, localAccount } = useContext(AccountContext)
 
   const [message, setMessage] = useState({});
 
   useEffect(() => {
-    const getConversationMessage = async() => {
-        const data = await getConversation({ senderId: account.sub, receiverId: user.sub });
-        setMessage({ text: data?.message, timestamp: data?.updatedAt });
-    }
-    getConversationMessage();
-}, [newMessageFlag]);
+        const getConversationMessage = async() => {
+            const recieveid = user.sub || user._id 
+            const sendid = localAccount?._id || account?.sub
+
+            const data = await getConversation({ senderId: sendid, receiverId: recieveid });
+            setMessage({ text: data?.message, timestamp: data?.updatedAt });
+        }
+      getConversationMessage();
+  }, [newMessageFlag]);
 
   const getUser = async () => {
-    setPerson(user)
-    await setConversation({senderId : account.sub, receverId : user.sub})
-  }
+      
+      const recieveid = user?.sub || user?._id 
+      const sendid = localAccount?._id || account?.sub
+      
+      await setConversation({senderId : sendid, receverId : recieveid})
+      setPerson(user)
+  } 
+
+  const profilePicture = user?.picture || user?.profilePhoto;
 
   return (
     <div className='user-info' onClick={() => getUser()}>
         <div>
-            <img src={user.picture} alt="dp-user" />
+            <img src={profilePicture} alt="dp-user" />
         </div>
         <div style={{ width: '100%'}}>
+
             <div className='container'>
                 <div>{user.name}</div>
                 {
+                    // here I have to check
                     message?.text && 
                     <Timestamp>{formatDate(message?.timestamp)}</Timestamp>  
                 }
             </div>
+
             <Box>
                     <Text>{message?.text?.includes('localhost') ? 'media' : message.text}</Text>
-              </Box>
+            </Box>
         </div>
     </div>
   )

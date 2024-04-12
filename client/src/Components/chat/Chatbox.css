@@ -1,5 +1,7 @@
 .menu-section {
-    min-width: 450px;
+    /* min-width: 450px; */
+    min-width: 250px;
+    /* max-width: 23%; */
 }
 
 .chat-section {

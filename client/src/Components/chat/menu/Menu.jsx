@@ -8,10 +8,10 @@ function Menu() {
   const [text, setText] = useState('');
 
   return (
-    <>
+    <> 
         <Header/> 
-        {/* <Search setText = {setText} /> */}
-        {/* <Conversation text = {text} /> */}
+        <Search setText = {setText} />
+        <Conversation text = {text} />
     </>
   )
 }

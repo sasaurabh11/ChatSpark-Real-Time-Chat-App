@@ -1,16 +1,3 @@
-// import React from 'react'
-
-// function MessageSingle({message}) {
-//   return (
-//     <>
-//         <div>{message.text}</div>
-//         <div>{message.createdAt}</div>
-//     </>
-//   )
-// }
-
-// export default MessageSingle
-
 import { useContext } from 'react';
 
 import { Box, styled, Typography } from '@mui/material';
@@ -56,12 +43,14 @@ const Time = styled(Typography)`
 `;
 
 const MessageSingle = ({ message }) => {
-    const { account } = useContext(AccountContext);
+    const { account, localAccount } = useContext(AccountContext);
+
+    const accountValue = account?.sub || localAccount?._id
 
     return (
         <>
         {
-            account.sub === message.senderId ? 
+            accountValue === message.senderId ? 
                 <Own>
                     {
                         message.type === 'file' ? <ImageMessage message={message} /> : <TextMessage message={message} />

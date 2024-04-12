@@ -36,10 +36,9 @@ function Chatbox() {
               
             </div>
 
-            {/* <div className='empty-chat'>
-
+            <div className='empty-chat'>
                 {Object.keys(person).length ? <ChatUser/> : <Emptychat/>}
-            </div> */}
+            </div>
 
         </div>
     </Dialog>

@@ -11,7 +11,7 @@ import MessageSingle from './MessageSingle'
 
 function Messages({person, conversation}) {
 
-  const { account, socket, newMessageFlag, setNewMessageFlage } = useContext(AccountContext)
+  const { account, localAccount, socket, newMessageFlag, setNewMessageFlage } = useContext(AccountContext)
 
   const [value, setValue] = useState('')
   const [messages, setMessages] = useState([])
@@ -48,33 +48,79 @@ function Messages({person, conversation}) {
       setMessages(data)
     }
     conversation._id && getMessageDetails();
-  },[person._id, conversation._id, newMessageFlag])
+  },[person._id, conversation?._id, newMessageFlag])
 
-  const sendText =async (e) => {
+  const sendText = async (e) => {
     const code = e.keyCode || e.which;
     if(code === 13) {
       let massage = {}
 
-      if(!file) {
+    //   if(!file) {
+
+    //     console.log(account)
+
+    //     const accountValue = account?.sub || account?._id
+    //     const personvalue = person?.sub || person?._id
+
+    //   //   massage = {
+    //   //     senderId: account.sub,
+    //   //     receiverId: person.sub,
+    //   //     conversationId: conversation._id,
+    //   //     type: 'text',
+    //   //     text: value
+    //   //   }
+    //   // } else {
+    //   //   massage = {
+    //   //     senderId: account.sub,
+    //   //     receiverId: person.sub,
+    //   //     conversationId: conversation._id,
+    //   //     type: 'file',
+    //   //     text: image
+    //   //   }
+    //   // }
+
+    //   massage = {
+    //     senderId: accountValue,
+    //     receiverId: personvalue,
+    //     conversationId: conversation._id,
+    //     type: 'text',
+    //     text: value
+    //   }
+    // } else {
+    //   massage = {
+    //     senderId: accountValue,
+    //     receiverId: personvalue,
+    //     conversationId: conversation._id,
+    //     type: 'file',
+    //     text: image
+    //   }
+    // }
+
+      if (!file) {
+        console.log("account", account);
+        console.log( "local", localAccount);
+
+        const accountValue = account?.sub || (localAccount && localAccount._id);
+        const personValue = person?.sub || (person && person._id);
 
         massage = {
-          senderId: account.sub,
-          receiverId: person.sub,
+          senderId: accountValue,
+          receiverId: personValue,
           conversationId: conversation._id,
           type: 'text',
           text: value
-        }
+        };
       } else {
         massage = {
-          senderId: account.sub,
-          receiverId: person.sub,
+          senderId: accountValue,
+          receiverId: personValue,
           conversationId: conversation._id,
           type: 'file',
           text: image
-        }
+        };
       }
 
-      // console.log(massage)
+      console.log(massage)
 
       socket.current.emit('sendMessage', massage)
 
@@ -98,6 +144,7 @@ function Messages({person, conversation}) {
                ))
             }
         </div>
+
         <Footer
           sendText={sendText}
           setValue={setValue}

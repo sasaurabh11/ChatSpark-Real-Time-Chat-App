@@ -19,15 +19,6 @@ function Header() {
 
   const profilePicture = account?.picture || localAccount?.profilePhoto;
 
-  useEffect(() => {
-    const fetchDataofLocalAccount = async () => {
-        let resopnse = await getInfoLocalAccount();
-        // let filterData = resopnse.filter(user => user.name.toLowerCase().includes(text.toLowerCase()))
-        // setUser(filterData)
-    }
-    fetchDataofLocalAccount()
-}, [text])
-
   return (
     <>
       <div className='header-design'>
