@@ -1,0 +1,33 @@
+.left-design{
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:space-between;
+    height: 90vh;
+    width: 1.5rem;
+    /* background-color: black; */
+}
+
+.lower-left-design{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 25%;
+}
+
+.upper-left-design{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 18%;
+    margin-top: 2rem;
+}
+
+.left-design img{
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}

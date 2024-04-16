@@ -84,7 +84,7 @@ export const signupLocal = async (formData) => {
 export const loginLocal = async (data) => {
     try {
         let response = await axios.post(`${url}/api/v1/user/loginlocal`, data);
-        // console.log(response.data)
+        console.log("response in api ", response.data)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)
@@ -94,7 +94,7 @@ export const loginLocal = async (data) => {
 export const getInfoLocalAccount = async () => {
     try {
         let response = await axios.get(`${url}/api/v1/user/getalluserlocal`);
-        console.log(response.data)
+        // console.log(response.data)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)

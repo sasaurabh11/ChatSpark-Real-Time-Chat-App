@@ -8,7 +8,7 @@ import {uploadFile} from '../../../Service/api'
 const Container = styled(Box)`
     height: 55px;
     background: #ededed;
-    width: 100%;
+    width: 97%;
     display: flex;
     align-items: center;
     padding: 0 15px;
@@ -77,7 +77,7 @@ const Footer = ({ sendText, value,  setValue, setFile, file, setImage }) => {
             <Search>
                 <InputField
                     placeholder="Type a message"
-                    inputProps={{ 'aria-label': 'search' }}
+                    inputProps={{ 'aria-label': 'search', style: { border: 'none' } }}
                     onChange={(e) => setValue(e.target.value)}
                     onKeyPress={(e) => sendText(e)}
                     value={value}

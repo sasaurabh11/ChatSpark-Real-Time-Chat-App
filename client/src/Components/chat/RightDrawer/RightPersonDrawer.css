@@ -1,0 +1,28 @@
+.right-person-drawer-div {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #635252;
+    height: 100%;
+  }
+
+  .right-person-drawer-div h2 {
+    margin-top: 10px;
+    color: wheat;
+  }
+
+  .right-person-drawer-div p{
+    color: rgb(220, 212, 198);
+  }
+
+  .heading-email{
+    margin-right: auto;
+    margin-left: 1.5rem;
+    margin-bottom: -0.5rem;
+    color:rgb(221, 196, 165);
+  }
+
+
+
+  

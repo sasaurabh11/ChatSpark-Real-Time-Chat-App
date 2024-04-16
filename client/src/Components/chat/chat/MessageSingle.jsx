@@ -7,6 +7,7 @@ import { AccountContext } from '../../../ContextApi/AccountProvide';
 
 import { downloadMedia, formatDate } from '../../../Utills/commonUtills';
 // import { iconPDF } from '../../../constants/data';
+import './MessageSingle.css'
 
 const Wrapper = styled(Box)`
     background: #FFFFFF;
@@ -43,9 +44,11 @@ const Time = styled(Typography)`
 `;
 
 const MessageSingle = ({ message }) => {
-    const { account, localAccount } = useContext(AccountContext);
+    const { account, localAccount, person } = useContext(AccountContext);
 
     const accountValue = account?.sub || localAccount?._id
+    const profilePicture = account?.picture || localAccount?.profilePhoto;
+    const personPicture = person?.picture || person?.profilePhoto;
 
     return (
         <>
@@ -55,9 +58,15 @@ const MessageSingle = ({ message }) => {
                     {
                         message.type === 'file' ? <ImageMessage message={message} /> : <TextMessage message={message} />
                     }
+                    <div className="profilePictureContainer">
+                            <img className='ppformsg' src={profilePicture} alt="dp" />
+                    </div>
                 </Own>
             : 
                 <Wrapper>
+                    <div className='profilePictureContainer'>
+                        <img className='ppformsg' src={personPicture} alt="persondp" />
+                    </div>
                     {
                         message.type === 'file' ? <ImageMessage message={message} /> : <TextMessage message={message} />
                     }

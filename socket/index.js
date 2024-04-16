@@ -16,7 +16,7 @@ const io = new Server(port, {
 let users = [];
 
 const addUser = (userData, socketId) => {
-    console.log("user in socket", userData)
+    // console.log("user in socket", userData)
     !users.some(user => ((user.sub === userData.sub) || (user._id === userData._id))) && users.push({ ...userData, socketId });
 }
 

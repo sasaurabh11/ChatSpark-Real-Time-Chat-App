@@ -23,9 +23,11 @@ function Header() {
     <>
       <div className='header-design'>
 
-        {profilePicture && ( 
+        {/* {profilePicture && ( 
           <img src={profilePicture} alt="dp" onClick={handleDrawer} />
-        )}
+        )} */}
+
+        <h2>Chats</h2>
 
         <div className='Icons'>
           <ChatIcon/>
