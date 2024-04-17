@@ -22,7 +22,7 @@ function Messages({person, conversation}) {
 
   const scrollRef = useRef()
 
-  useEffect(() => {
+  useEffect(() => { 
     socket.current.on('getMessage', data => {
       setIncomingMessage({
         ...data,
@@ -97,8 +97,8 @@ function Messages({person, conversation}) {
     // }
 
       if (!file) {
-        console.log("account", account);
-        console.log( "local", localAccount);
+        // console.log("account", account);
+        // console.log( "local", localAccount);
 
         const accountValue = account?.sub || (localAccount && localAccount._id);
         const personValue = person?.sub || (person && person._id);
@@ -122,7 +122,7 @@ function Messages({person, conversation}) {
 
       console.log(massage)
 
-      socket.current.emit('sendMessage', massage)
+      socket.current.emit('sendMessage', massage) 
 
       await newMassage(massage)
 

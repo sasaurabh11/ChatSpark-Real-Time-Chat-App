@@ -19,7 +19,7 @@ const UserSchema = new Schema(
             index: true
         },
         profilePhoto: {
-            type: String
+            type: String,
         },
         password: {
             type: String,

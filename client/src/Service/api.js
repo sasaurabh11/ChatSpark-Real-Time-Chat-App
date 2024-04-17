@@ -14,7 +14,7 @@ export const addUser = async (data) => {
 export const getUser = async() => {
     try {
         let response = await axios.get(`${url}/api/v1/user/getuser`);
-        // console.log(response)
+        // console.log("get user response ", response)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)
@@ -100,3 +100,31 @@ export const getInfoLocalAccount = async () => {
         console.error('error while calling getuser api', error.message)
     }
 }
+
+export const sendrequestforFriend = async (data) => {
+    try {
+        let response = await axios.post(`${url}/api/v1/user/friend-request`, data);
+    } catch (error) {
+        console.error('error while calling sendfriendRequest api', error.message)
+    }
+}
+
+export const acceptanceforfriendShip = async (data) => {
+    try {
+        let response = await axios.post(`${url}/api/v1/user/accept-friend-request`, data);
+    } catch (error) {
+        console.error('error while calling acceptanceforfriendShip api', error.message)
+    }
+}
+
+export const fetchAllRequests = async (requestId) => {
+    try {
+        // http://localhost:8000/api/v1/user/get-friend-request/6617a53c78608f29f61a028f
+        let response = await axios.get(`${url}/api/v1/user/get-friend-request/${requestId}`);
+        console.log("response", response);
+        return response.data;
+    } catch (error) {
+        console.error('error while calling fetchAllRequests api', error.message);
+        throw error;
+    }
+};

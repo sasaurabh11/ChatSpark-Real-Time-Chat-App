@@ -9,8 +9,11 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CallIcon from '@mui/icons-material/Call';
 import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 
 import { AccountContext } from '../../../ContextApi/AccountProvide';
+import { NavLink } from 'react-router-dom';
 
 function LeftIcons() {
   const { account,  localAccount} = useContext(AccountContext);
@@ -34,14 +37,26 @@ function LeftIcons() {
         <div className='left-design'>
 
           <div className='upper-left-design'>
-              <WhatsAppIcon/>
+            <WhatsAppIcon/>
+              <NavLink
+                to='/add-friends'
+              >
+                <PersonAddIcon />
+              </NavLink>
+
               <CallIcon/>
               <DataSaverOffIcon/>
           </div>
 
           <div className='lower-left-design'>
 
-              <StarOutlineIcon/>
+              {/* <StarOutlineIcon/> */}
+              <NavLink
+                to='/notifications'
+              >
+                  <CircleNotificationsIcon/>
+              </NavLink>
+
               <ArchiveIcon/>
               <SettingsIcon/>
 

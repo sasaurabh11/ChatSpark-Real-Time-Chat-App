@@ -2,6 +2,10 @@ import Messenger from "./Components/Messenger"
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css'
 import AccountProvider from "./ContextApi/AccountProvide";
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Chatbox from "./Components/chat/Chatbox";
+import SendrequestUI from "./Components/Friend/SendrequestUI";
+import RequestNotification from "./Components/Friend/RequestNotification";
 
 function App() {
   const clientid = import.meta.env.VITE_CLIENT_ID || '';
@@ -9,7 +13,15 @@ function App() {
   return (
     <GoogleOAuthProvider clientId= {clientid} >
       <AccountProvider>
-          <Messenger/>
+          <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Messenger />} />
+                    <Route path="/chats" element={<Chatbox />} />
+                    <Route path="/add-friends" element={<SendrequestUI />} />
+                    <Route path="/notifications" element={<RequestNotification/>} />
+
+                </Routes>
+          </BrowserRouter>
       </AccountProvider>
     </GoogleOAuthProvider>
   )

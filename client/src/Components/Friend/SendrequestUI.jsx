@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-import { getUser, getInfoLocalAccount } from "../../../Service/api";
-import UserConversation from "./UserConversation";
-
-import "./Conversation.css";
-
+import React from 'react'
+import { useState, useEffect, useContext } from 'react';
+import { getUser, getInfoLocalAccount } from '../../Service/api';
+import AllUsers from './AllUsers';
+import { AccountContext } from '../../ContextApi/AccountProvide';
 import { Divider } from "@mui/material";
 
-import { AccountContext } from "../../../ContextApi/AccountProvide";
-
-function Conversation({ text }) {
+function SendrequestUI({text}) {
     const [users, setUser] = useState([]);
     const [localUsers, setLocalUsers] = useState([]);
 
@@ -36,20 +33,8 @@ function Conversation({ text }) {
         fetchData();
     }, [text]); 
 
-    useEffect(() => {
-        const accountTosendSocket = account || localAccount
-
-        // console.log("accont to send", accountTosendSocket)
-
-        socket.current.emit("addUsers", accountTosendSocket);
-        socket.current.on("getUsers", (users) => {
-            // console.log("users", users)
-            setActiveUser(users);
-        });
-    }, [account]);
-
-    return (
-        <div className="AllUsers">
+  return (
+    <div className="AllUsers">
 
             {users.length > 0 && account && (
                 <>
@@ -59,7 +44,7 @@ function Conversation({ text }) {
                             account &&
                             user.sub !== account.sub && (
                                 <React.Fragment key={user.sub}>
-                                    <UserConversation user={user} />
+                                    <AllUsers user={user} />
                                     <Divider />
                                 </React.Fragment>
                             )
@@ -68,7 +53,7 @@ function Conversation({ text }) {
                         (user) =>
                             user && (
                                 <React.Fragment key={user._id}>
-                                    <UserConversation user={user} />
+                                    <AllUsers user={user} />
                                     <Divider />
                                 </React.Fragment>
                             )
@@ -84,7 +69,7 @@ function Conversation({ text }) {
                             localAccount &&
                             user._id !== localAccount._id && (
                                 <React.Fragment key={user._id}>
-                                    <UserConversation user={user} />
+                                    <AllUsers user={user} />
                                     <Divider />
                                 </React.Fragment>
                             )
@@ -95,48 +80,20 @@ function Conversation({ text }) {
                             user &&
                             (
                                 <React.Fragment key={user.sub}>
-                                    <UserConversation user={user} />
+                                    <AllUsers user={user} />
                                     <Divider />
                                 </React.Fragment>
                             )
                     )}
                 </>
             )}
-
-            {/* {users.length > 0 && (
-                <>
-                    {users.map(
-                        (user) =>
-                            user &&
-                            account &&
-                            user.sub !== account.sub && (
-                                <React.Fragment key={user.sub}>
-                                    <UserConversation user={user} />
-                                    <Divider />
-                                </React.Fragment>
-                            )
-                    )}
-                </>
-            )}
-
-            {localUsers.length > 0 && (
-                <>
-                    {localUsers.map(
-                        (user) =>
-                            user &&
-                            localAccount &&
-                            user._id !== localAccount._id && (
-                                <React.Fragment key={user._id}>
-                                    <UserConversation user={user} />
-                                    <Divider />
-                                </React.Fragment>
-                            )
-                    )}
-                </>
-            )} */}
             {users.length === 0 && localUsers.length === 0 && <p>No users found</p>}
         </div>
-    );
+  )
 }
 
-export default Conversation;
+SendrequestUI.defaultProps = {
+  text: '' // Default value is an empty string
+};
+
+export default SendrequestUI

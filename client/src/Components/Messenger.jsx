@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom"
 import LoginBox from "./account/LoginBox"
 import {AppBar, Toolbar, styled} from "@mui/material"
 import Chatbox from "./chat/Chatbox"
@@ -25,18 +26,20 @@ function Messenger() {
     <>
       {
           account || localAccount ? 
-          
-              <div className="login-section">
-                  <ChatHeader> 
-                      <Toolbar>
+                // <NavLink
+                //     to="/chats"
+                // >
+                    <div className="login-section">
+                        <ChatHeader> 
+                            <Toolbar>
 
-                      </Toolbar>
-                  </ChatHeader>
+                            </Toolbar>
+                        </ChatHeader>
 
-                  <Chatbox /> 
-              </div>
+                        <Chatbox /> 
+                    </div>
+            //   </NavLink>
           :
-
               <div className="login-section">
                 <LoginHeader>
                     <Toolbar>

@@ -7,6 +7,9 @@ import { useContext } from 'react';
 import { AccountContext } from '../../ContextApi/AccountProvide';
 
 import { addUser, signupLocal, loginLocal } from '../../Service/api'
+import { NavLink } from 'react-router-dom';
+
+// import {photo} from "../../assets/defaultprofile.jpg"
 
 function AuthForm() {
   const {setAccount, setLocalAccount, localAccount} = useContext(AccountContext)
@@ -47,6 +50,8 @@ function AuthForm() {
     setProfilePhoto(event.target.files[0]);
   };
 
+  const DEFAULT_PROFILE_PHOTO_URL = '../../assets/defaultprofile.jpg';
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -68,6 +73,8 @@ function AuthForm() {
       formData.append('password', password);
       if (profilePhoto) {
         formData.append('profilePhoto', profilePhoto);
+      }else {
+        formData.append('profilePhoto', DEFAULT_PROFILE_PHOTO_URL);
       }
       
       const responseLocal = await signupLocal(formData);

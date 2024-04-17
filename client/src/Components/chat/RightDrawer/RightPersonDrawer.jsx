@@ -68,11 +68,6 @@ function RightPersonDrawer() {
 
             <h3 className='heading-email'>Email: </h3>
             <p>{person.email}</p>
-            {/* <BoxWrapper> */}
-                {/* <Typography>Your name</Typography> */}
-                {/* <Typography>{person.name}</Typography> */}
-                {/* <h2>{person.name}</h2> */}
-            {/* </BoxWrapper> */}
             <DescriptionContainer>
                 <Typography>
                     This is not username or pin. This name will be visible to

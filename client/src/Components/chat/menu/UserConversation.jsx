@@ -6,6 +6,7 @@ import { AccountContext } from '../../../ContextApi/AccountProvide'
 import { formatDate } from '../../../Utills/commonUtills'
 
 import { setConversation, getConversation } from '../../../Service/api'
+import SendfriendRequest from '../../Friend/SendfriendRequest';
 
 const Timestamp = styled(Typography)`
     font-size: 12px;
@@ -44,12 +45,15 @@ function UserConversation({user}) {
       
       await setConversation({senderId : sendid, receverId : recieveid})
       setPerson(user)
-  } 
+  }  
 
   const profilePicture = user?.picture || user?.profilePhoto;
 
   return (
     <div className='user-info' onClick={() => getUser()}>
+
+        {/* <SendfriendRequest senderId={localAccount._id} recipientId={user._id } /> */}
+
         <div>
             <img src={profilePicture} alt="dp-user" />
         </div>

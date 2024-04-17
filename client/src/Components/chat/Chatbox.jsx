@@ -7,6 +7,7 @@ import './Chatbox.css'
 import ChatUser from './chat/ChatUser';
 import { useContext } from 'react';
 import { AccountContext } from '../../ContextApi/AccountProvide';
+import AcceptfriendRequest from '../Friend/AcceptfriendRequest';
 
 const dialogStyle = {
     height : '95%',
@@ -24,7 +25,7 @@ const dialogStyle = {
 
 function Chatbox() {
   const {person} = useContext(AccountContext)
-  console.log(person)
+  // console.log(person)
 
   return (
     // <>
@@ -35,6 +36,8 @@ function Chatbox() {
         maxWidth={'md'}
     >
         <div className='chat-section'>
+          {/* <AcceptfriendRequest requestId="661fae2ee80e7a06f2319291" /> */}
+
             <div>
               <LeftIcons/>
             </div>

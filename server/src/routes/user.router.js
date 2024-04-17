@@ -10,6 +10,7 @@ import { uploadFile } from "../controllers/file.controller.js";
 import { uploadmiddleware } from "../middlewares/file.middleware.js";
 
 import { signupLocal, loginUserLocal, getUserLocalController } from "../controllers/userLocal.contoller.js";
+import { sendfriendrequest, getfriendRequest, acceptfriendrequest } from "../controllers/Friend.controller.js";
 
 const router = Router()
 
@@ -27,6 +28,10 @@ router.route("/conversation/get").post(getconversations)
 
 router.route('/message/add').post(newMessage) 
 router.route('/message/get/:id').get(getMessage);
+
+router.route('/friend-request').post(sendfriendrequest)
+router.route('/get-friend-request/:requestId').get(getfriendRequest)
+router.route('/accept-friend-request').post(acceptfriendrequest)
 
 router.route('/file/upload').post(uploadmiddleware.single("file"), uploadFile);
 

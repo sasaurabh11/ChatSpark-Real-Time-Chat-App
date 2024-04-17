@@ -19,19 +19,21 @@ const signupLocal = async (req, res) => {
         //     return res.status(500)
         //     .json('name is Required')
         // }
-    
+
+        
         if([name, email, password].some((field) => field?.trim() === "")) {
             return res.status(500)
             .json('All Information is Required')
         }
-    
+        
         const existedUser = await Userlocal.findOne({ email: email })
-
+        
         if(existedUser) {
             return res.status(500)
             .json("user already exists")
         }
-
+        
+        console.log(name, email);
     
         const profilelocalPath = req.file?.path;
 
