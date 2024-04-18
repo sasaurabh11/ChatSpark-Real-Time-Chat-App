@@ -2,9 +2,7 @@ import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 
-import './Search.css'
-
-function Search({setText}) {
+function SearchUsers({setText}) {
   return (
     <div className='search-portion'>
         <div className='wrapper'>
@@ -21,6 +19,6 @@ function Search({setText}) {
         </div>
     </div>
   )
-} 
+}
 
-export default Search
+export default SearchUsers

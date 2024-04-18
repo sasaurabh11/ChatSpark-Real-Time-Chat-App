@@ -13,7 +13,7 @@ function ChatHeader({person}) {
   return (
     <div className='Header'>
         <img src={personPhoto} alt="dp" />
-        <div>
+        <div> 
             <div style={{marginLeft:'12px'}}>{person.name}</div>
             {/* <div style={{marginLeft:'12px', fontSize: '12px', color:'rgba(0, 0, 0, 0.6'}}> {activeUser?.find(user => console.log(user) ((user.sub === person.sub) || (user._id === person._id))) ? 'Online' : 'Offline'} </div> */}
 

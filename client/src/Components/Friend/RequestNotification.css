@@ -1,0 +1,56 @@
+
+.users-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .users-container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .users-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .user-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-item img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .user-details {
+    flex: 1;
+  }
+  
+  .user-details p {
+    margin: 8px 0;
+  }
+  
+  .accept-request-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .accept-request-btn:hover {
+    background-color: #45a049;
+  }
+  

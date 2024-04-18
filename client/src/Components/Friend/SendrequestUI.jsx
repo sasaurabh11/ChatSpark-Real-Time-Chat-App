@@ -34,7 +34,7 @@ function SendrequestUI({text}) {
     }, [text]); 
 
   return (
-    <div className="AllUsers">
+    <div className="Allfriends">
 
             {users.length > 0 && account && (
                 <>
@@ -93,7 +93,7 @@ function SendrequestUI({text}) {
 }
 
 SendrequestUI.defaultProps = {
-  text: '' // Default value is an empty string
+  text: ''
 };
 
 export default SendrequestUI

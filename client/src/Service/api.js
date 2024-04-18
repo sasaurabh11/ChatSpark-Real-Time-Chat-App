@@ -119,12 +119,23 @@ export const acceptanceforfriendShip = async (data) => {
 
 export const fetchAllRequests = async (requestId) => {
     try {
-        // http://localhost:8000/api/v1/user/get-friend-request/6617a53c78608f29f61a028f
         let response = await axios.get(`${url}/api/v1/user/get-friend-request/${requestId}`);
-        console.log("response", response);
+        // console.log("response", response);
         return response.data;
     } catch (error) {
         console.error('error while calling fetchAllRequests api', error.message);
         throw error;
     }
 };
+
+export const getFriendsDetails = async (requestId) => {
+    try {
+        let response = await axios.get(`${url}/api/v1/user/get-all-friends`, {
+            params: { requestId }
+        });
+        return response.data.friendships
+    } catch (error) {
+        console.error('error while calling getFriendsDetails api', error.message);
+        throw error;
+    }
+}

@@ -2,6 +2,9 @@
 import { FriendRequest } from "../model/FrientRequest.model.js";
 import { Friendship } from "../model/FriendShip.model.js";
 import { Userlocal } from "../model/userLocal.model.js";
+import mongoose from "mongoose";
+import { Types } from "mongoose";
+const { ObjectId } = Types;
 
 export const sendfriendrequest = async (req, res) => {
   try {
@@ -42,8 +45,9 @@ export const getfriendRequest = async (req, res) => {
         // console.log("recientp: ", recipientId)
         const friendRequests = await FriendRequest.find({ recipient: recipientId });
 
+        const pendingRequests = friendRequests.filter(request => request.status === 'pending');
 
-        const senderIds = friendRequests.map(request => request.sender);
+        const senderIds = pendingRequests.map(request => request.sender);
 
         const senders = await Userlocal.find({ _id: { $in: senderIds } });
 
@@ -60,21 +64,33 @@ export const getfriendRequest = async (req, res) => {
 
 export const acceptfriendrequest = async (req, res) => {
     try {
-        const { requestId } = req.body;
+        const { requestId, recipientId } = req.body;
 
-        const request = await FriendRequest.findById(requestId);
+        
+        const request = await FriendRequest.findOne({sender : requestId});
+        
+          if (!request) {
+            return res.status(404).json({ message: 'Friend request not found.' });
+          }
+          if (request.status !== 'pending') {
+            return res.status(400).json({ message: 'Friend request already processed.' });
+          }
 
-        if (!request) {
-          return res.status(404).json({ message: 'Friend request not found.' });
-        }
-        if (request.status !== 'pending') {
-          return res.status(400).json({ message: 'Friend request already processed.' });
-        }
+          if (request.recipient.toString() !== recipientId) {
+              return res.status(400).json({ message: 'Invalid recipient for this friend request.' });
+          }
+            
+          request.status = 'accepted';
+          await request.save();
 
-        request.status = 'accepted';
-        await request.save();
+        //   const existfriendShip = await Friendship.findOne({ users: {$all: [request.sender, request.recipient]} }) 
 
-        const friendship = new Friendship({ users: [request.sender, request.recipient] });
+        //   if(existfriendShip) {
+        //     return res.status(200)
+        //     .json('FriendShip already exist')
+        // }
+          
+          const friendship = new Friendship({ users: [request.sender, request.recipient] });
         
         await friendship.save();
 
@@ -85,3 +101,24 @@ export const acceptfriendrequest = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
       }
 };
+
+export const getFriends = async (req, res) => {
+  try {
+      const { requestId } = req.query;
+
+      const friendships = await Friendship.find({ 
+        users: { $elemMatch: { $eq: requestId } }
+      }).populate('users');
+      
+      if (friendships.length === 0) {
+          return res.status(404).json({ message: 'No friendships found.' });
+      }
+
+      res.status(200).json({ message: 'Friendships found successfully.', friendships });
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error in getFriends server' });
+  }
+
+}
