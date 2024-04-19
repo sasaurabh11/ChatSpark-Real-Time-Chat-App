@@ -13,3 +13,9 @@
 .user-info:hover{
     background-color: rgba(162, 162, 180, 0.458);
 } 
+
+.para {
+    display: flex;
+    justify-content: center;
+
+}

@@ -42,7 +42,6 @@ function Conversation({ text }) {
         const fetchData = async () => {
 
             const requestId = account?.sub || localAccount?._id;
-            console.log(requestId)
             const response = await getFriendsDetails(requestId);
 
             let filterData = response.map(friendship => {
@@ -97,7 +96,7 @@ function Conversation({ text }) {
                         })}
                     </>
                 )}
-            {friends.length === 0 && <p>No users found</p>}
+            {friends.length === 0 && <p className="para">No users found. Add friends to start chat!</p>}
         </div>
     );
 }

@@ -15,14 +15,18 @@ function ChatHeader({person}) {
         <img src={personPhoto} alt="dp" />
         <div> 
             <div style={{marginLeft:'12px'}}>{person.name}</div>
-            {/* <div style={{marginLeft:'12px', fontSize: '12px', color:'rgba(0, 0, 0, 0.6'}}> {activeUser?.find(user => console.log(user) ((user.sub === person.sub) || (user._id === person._id))) ? 'Online' : 'Offline'} </div> */}
 
-            <div style={{ marginLeft: '12px', fontSize: '12px', color: 'rgba(0, 0, 0, 0.6)' }}>
-            {/* console.log("user in header", user); console.log("person in header", person); */}
-              {activeUser?.find(user => { return ((user.sub === person.sub) || (user._id === person._id)); }) ? 'Online' : 'Offline'}
+            <div style={{ marginLeft: '12px', fontSize: '13px', color: 'rgba(0, 0, 0, 0.6)' }}>
+                  {activeUser && activeUser.find(user => {
+                        if (user.sub && person.sub) {
+                          return user.sub === person.sub;
+                        }
+                        if (user._id && person._id) {
+                          return user._id === person._id;
+                        }
+                        return false;
+                      }) ? 'Online' : 'Offline'}
           </div>
-
-            {/* her I have to check */}
         </div>
         <div className='icons'>
             <Search/>

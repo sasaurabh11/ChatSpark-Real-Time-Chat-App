@@ -43,19 +43,19 @@ function SendrequestUI({text}) {
                             user &&
                             account &&
                             user.sub !== account.sub && (
-                                <React.Fragment key={user.sub}>
+                                <div key={user.sub}>
                                     <AllUsers user={user} />
-                                    <Divider />
-                                </React.Fragment>
+                                    <Divider sx={{ width: '300px' }} />
+                                </div>
                             )
                     )}
                     {localUsers.map(
                         (user) =>
                             user && (
-                                <React.Fragment key={user._id}>
+                                <div key={user._id}>
                                     <AllUsers user={user} />
-                                    <Divider />
-                                </React.Fragment>
+                                    <Divider sx={{ width: '300px'}} />
+                                </div>
                             )
                     )}
                 </>
@@ -68,10 +68,10 @@ function SendrequestUI({text}) {
                             user &&
                             localAccount &&
                             user._id !== localAccount._id && (
-                                <React.Fragment key={user._id}>
+                                <div key={user._id}>
                                     <AllUsers user={user} />
-                                    <Divider />
-                                </React.Fragment>
+                                    <Divider sx={{ width: '300px'}} />
+                                </div>
                             )
                     )}
 
@@ -79,10 +79,10 @@ function SendrequestUI({text}) {
                         (user) =>
                             user &&
                             (
-                                <React.Fragment key={user.sub}>
+                                <div key={user.sub}>
                                     <AllUsers user={user} />
-                                    <Divider />
-                                </React.Fragment>
+                                    <Divider sx={{ width: '300px'}} />
+                                </div>
                             )
                     )}
                 </>

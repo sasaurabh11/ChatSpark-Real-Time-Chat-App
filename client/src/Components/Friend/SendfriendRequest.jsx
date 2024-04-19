@@ -5,27 +5,27 @@ import { sendrequestforFriend } from "../../Service/api";
 
 function SendfriendRequest({ senderId, recipientId }) {
   const [loading, setLoading] = useState(false);
+  const [buttonText, setButtonText] = useState("Send Friend Request");
+  const [buttonColor, setButtonColor] = useState("#007bff");
 
   const sendRequest = async () => {
     try {
-
       setLoading(true);
       await sendrequestforFriend({ senderId, recipientId });
-      alert("Friend request sent successfully.");
-
+      setButtonText("Friend Request Sent");
+      setButtonColor("#28a745");
     } catch (error) {
-
       console.error(error);
-      alert("Error sending friend request.");
-
+      setButtonText("Error Sending Request");
+      setButtonColor("#dc3545");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <button onClick={sendRequest} disabled={loading}>
-      {loading ? "Sending request..." : "Send Friend Request"}
+    <button onClick={sendRequest} disabled={loading} style={{ backgroundColor: buttonColor }}>
+      {loading ? "Sending request..." : buttonText}
     </button>
   );
 }

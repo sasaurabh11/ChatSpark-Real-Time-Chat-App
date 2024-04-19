@@ -27,26 +27,13 @@ function RequestNotification() {
   }, []);
 
   return (
-    // <div>
-    //   <h1>Users</h1>
-    //   <ul>
-    //     {users.map(user => (
-    //       <li key={user._id}>
-    //         <p>Name: {user.name}</p>
-    //         <p>Email: {user.email}</p>
-    //         <img src={user.picture || user.profilePhoto} alt="" />
-    //         <AcceptfriendRequest requestId={user._id || user.sub} />
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
 
     <div className="users-container">
-        <h1>Users</h1>
+        <h1>Users Sent You Friend Request For Chat</h1>
         <ul className="users-list">
           {users.map(user => (
             <li key={user._id} className="user-item">
-              <img src={user.picture || user.profilePhoto} alt="" />
+              <img src={user.picture || user.profilePhoto} alt="dp-user" />
               <div className="user-details">
                 <p>Name: {user.name}</p>
                 <p>Email: {user.email}</p>

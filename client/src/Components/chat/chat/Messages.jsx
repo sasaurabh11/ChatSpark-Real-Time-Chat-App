@@ -120,8 +120,6 @@ function Messages({person, conversation}) {
         };
       }
 
-      console.log(massage)
-
       socket.current.emit('sendMessage', massage) 
 
       await newMassage(massage)

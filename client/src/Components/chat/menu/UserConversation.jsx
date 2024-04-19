@@ -23,8 +23,6 @@ const Text = styled(Typography)`
 
 function UserConversation({user}) {
 
-    console.log("user ", user)
-
   const { setPerson, account, newMessageFlag, localAccount } = useContext(AccountContext)
 
   const [message, setMessage] = useState({});

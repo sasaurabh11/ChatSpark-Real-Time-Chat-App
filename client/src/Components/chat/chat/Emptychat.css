@@ -1,0 +1,56 @@
+/* .empty-chat-all{ */
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh; */
+    /* background-image: url('../../../assets/livechat.jpg'); */
+    /* background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0);
+
+    background-color: rgba(162, 162, 180, 0.207); */
+/* } */
+
+.empty-chat-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: -80px;
+    height: 100vh;
+    background-color: #004789; /* Light gray background */
+    background-image: linear-gradient(45deg, #e9ecef, #f8f9fa); /* Gradient background */
+    color: #333; /* Dark text color */
+    font-family: Arial, sans-serif; /* Default font family */
+}
+
+.empty-chat-all h1 {
+    font-size: 2.5rem; /* Large font size for header */
+    margin-bottom: 20px; /* Spacing below header */
+}
+
+.empty-chat-all p {
+    font-size: 1.2rem; /* Medium font size for paragraph */
+    margin-bottom: 20px; /* Spacing below paragraph */
+    max-width: 80%; /* Limit width of paragraph */
+    text-align: center; /* Center-align text */
+}
+
+.empty-chat-all .cta-button {
+    padding: 10px 20px; /* Padding for button */
+    margin-top: 1rem;
+    width: 10rem;
+    background-color: #007bff; /* Blue button color */
+    color: #fff; /* White text color */
+    border: none; /* Remove button border */
+    border-radius: 5px; /* Rounded button corners */
+    font-size: 1.2rem; /* Button text size */
+    cursor: pointer; /* Cursor style on hover */
+    transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.empty-chat-all .cta-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

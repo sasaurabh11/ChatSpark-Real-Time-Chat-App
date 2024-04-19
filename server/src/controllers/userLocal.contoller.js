@@ -33,44 +33,43 @@ const signupLocal = async (req, res) => {
             .json("user already exists")
         }
         
-        console.log(name, email);
-    
+        
         const profilelocalPath = req.file?.path;
-
+        
         const profilephoto =  await uploadOnCloudinary(profilelocalPath)
-    
+        
         if(!profilephoto) {
             res.status(200)
             .json("warning : profilePhoto is not uploaded on cloudinary")
         }
-    
+        
         const userlocalcheck = await Userlocal.create({
             name,
             email,
             password,
             profilePhoto : profilephoto?.url || ""
         })
-        
-        // const createdUser = await User.findById(userlocalcheck._id).select(
-        //     "-password"
-        // )
-    
-    
-        // if(!createdUser) {
-        //     return res.status(500)
-        //     .json('something went wrong in Local user creation')
-        // }
 
-        const userData = {
-            _id: userlocalcheck._id, // MongoDB _id
-            name: userlocalcheck.name,
-            email: userlocalcheck.email,
-            profilePhoto: userlocalcheck.profilePhoto
-        };
+        
+        const createdUser = await Userlocal.findById(userlocalcheck._id).select(
+            "-password"
+        )
+        
+        if(!createdUser) {
+            return res.status(500)
+            .json('something went wrong in Local user creation')
+        }
+
+        // const userData = {
+        //     _id: userlocalcheck._id, // MongoDB _id
+        //     name: userlocalcheck.name,
+        //     email: userlocalcheck.email,
+        //     profilePhoto: userlocalcheck.profilePhoto
+        // };
     
         return res.status(201).json({
             message: 'User created successfully',
-            user: userData
+            user: createdUser
         })
     } catch (error) {
         return res.status(500)
@@ -97,20 +96,20 @@ const loginUserLocal = async (req, res) => {
             .json('user not exist create new account')
         }
 
-        // const isValidPassword = await user.isPasswordCorrect(password)
+        const isValidPassword = await user.isPasswordCorrect(password)
 
-        // if(!isValidPassword) {
-        //     throw new ApiError(401, "Invalid User Credentials")
-        // }
-
-        if(password !== user.password) {
-            return res.status(401)
-            .json('Invalid User credentials')
+        if(!isValidPassword) {
+            throw new ApiError(401, "Invalid User Credentials")
         }
+
+        // if(password !== user.password) {
+        //     return res.status(401)
+        //     .json('Invalid User credentials')
+        // }
 
         // const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
 
-        // const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+        const loggedInUser = await Userlocal.findById(user._id).select("-password")
 
         // //frontend se koi modify nahi kar payega
         const options = {
@@ -124,7 +123,7 @@ const loginUserLocal = async (req, res) => {
         .json(
             {
                 message : "user login successfully",
-                user : user
+                user : loggedInUser
             }
         )
     } catch (error) {

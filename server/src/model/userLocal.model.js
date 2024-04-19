@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
-// import jwt from "jsonwebtoken";
-// import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt"
 // import nodemailer from "nodemailer"
 
 const UserSchema = new Schema(
@@ -35,12 +35,12 @@ const UserSchema = new Schema(
 )
 
 //middlaware to hash password of user using bcrypt
-// UserSchema.pre("save", async function (next) {
-//     if(!this.isModified("password")) return next()
+UserSchema.pre("save", async function (next) {
+    if(!this.isModified("password")) return next()
 
-//     this.password = await bcrypt.hash(this.password, 10);
-//     next()
-// })
+    this.password = await bcrypt.hash(this.password, 10);
+    next()
+})
 
 UserSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
