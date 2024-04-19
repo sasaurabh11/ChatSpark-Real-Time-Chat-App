@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url = 'http://localhost:8000'
+const url = 'https://chat-spark-api.vercel.app'
 
 export const addUser = async (data) => {
     try {
