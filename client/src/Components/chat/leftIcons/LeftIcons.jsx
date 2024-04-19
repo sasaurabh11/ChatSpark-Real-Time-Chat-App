@@ -38,14 +38,17 @@ function LeftIcons() {
 
           <div className='upper-left-design'>
             <WhatsAppIcon/>
+              <p style={{marginTop: '-3px'}}>Chats</p>
               <NavLink
                 to='/add-friends'
               >
                 <PersonAddIcon />
               </NavLink>
+              <p style={{marginTop: '-3px'}}>Users</p>
 
               <CallIcon/>
-              <DataSaverOffIcon/>
+              <p style={{marginTop: '-3px'}}>Calls</p>
+              {/* <DataSaverOffIcon/> */}
           </div>
 
           <div className='lower-left-design'>
@@ -56,9 +59,11 @@ function LeftIcons() {
               >
                   <CircleNotificationsIcon/>
               </NavLink>
+              <p style={{marginTop: '-3px'}}>Updates</p>
 
-              <ArchiveIcon/>
+              {/* <ArchiveIcon/> */}
               <SettingsIcon/>
+              <p style={{marginTop: '-3px'}}>Setting</p>
 
               {profilePicture && ( 
                 <img src={profilePicture} alt="dp" onClick={handleDrawer} />
