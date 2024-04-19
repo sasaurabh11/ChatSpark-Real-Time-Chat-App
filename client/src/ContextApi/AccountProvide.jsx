@@ -15,7 +15,7 @@ const AccountProvider = ({children}) => {
 
     useEffect(() => {
         // socket.current = io('ws://localhost:8000');
-        socket.current = io('ws://chatspark-real-time-chat-app-api.onrender.com');
+        socket.current = io('wss://chatspark-real-time-chat-app-api.onrender.com');
     }, [])
 
     return (
