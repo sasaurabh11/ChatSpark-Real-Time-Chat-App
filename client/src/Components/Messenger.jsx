@@ -26,9 +26,9 @@ function Messenger() {
     <>
       {
           account || localAccount ? 
-                <NavLink
-                    to="/chats"
-                >
+                // <NavLink
+                //     to="/chats"
+                // >
                     <div className="login-section">
                         <ChatHeader> 
                             <Toolbar>
