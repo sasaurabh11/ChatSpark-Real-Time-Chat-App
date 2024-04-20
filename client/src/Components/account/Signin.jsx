@@ -56,16 +56,16 @@ function AuthForm() {
     event.preventDefault();
 
     if (isLogin) {
-      console.log('Logging in with:', { email, password });
+      // console.log('Logging in with:', { email, password });
       const data = {email, password};
 
       const responseloginLocal = await loginLocal(data)
       setLocalAccount(responseloginLocal.user)
 
-      console.log(responseloginLocal)
+      // console.log(responseloginLocal)
 
     } else {
-      console.log('Signing up with:', {name,  email, password, profilePhoto });
+      // console.log('Signing up with:', {name,  email, password, profilePhoto });
       
       const formData = new FormData();
       formData.append('name', name);
@@ -80,7 +80,7 @@ function AuthForm() {
       const responseLocal = await signupLocal(formData);
       setLocalAccount(responseLocal.user)
 
-      console.log('signed up with user : ' , responseLocal)
+      // console.log('signed up with user : ' , responseLocal)
     }
   };
 

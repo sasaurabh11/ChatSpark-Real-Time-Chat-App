@@ -18,6 +18,7 @@ app.set("io", io);
 
 app.use(cors({
     origin: [process.env.CORS_ORIGIN, 'https://chat-spark-app.vercel.app'], //here add cors for deployed link
+    // origin : process.env.CORS_ORIGIN,
     credentials: true
 }))
 
@@ -59,7 +60,7 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', (data) => {
         // console.log(data.re/ceiverId)
         const user = getUser(data.receiverId);
-        io.to(user.socketId).emit('getMessage', data)
+        io.to(user?.socketId).emit('getMessage', data)
     })
 
     //disconnect

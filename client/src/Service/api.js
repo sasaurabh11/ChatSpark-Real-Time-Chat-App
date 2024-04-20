@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const url = 'https://chatspark-real-time-chat-app-api.onrender.com'
+// const url = 'http://localhost:8000'
 
 export const addUser = async (data) => {
     try {
@@ -73,7 +74,7 @@ export const signupLocal = async (formData) => {
             }
         });
         
-        console.log('Signup response:', response.data);
+        // console.log('Signup response:', response.data);
         return response.data;
 
     } catch (error) {
@@ -84,7 +85,7 @@ export const signupLocal = async (formData) => {
 export const loginLocal = async (data) => {
     try {
         let response = await axios.post(`${url}/api/v1/user/loginlocal`, data);
-        console.log("response in api ", response.data)
+        // console.log("response in api ", response.data)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)

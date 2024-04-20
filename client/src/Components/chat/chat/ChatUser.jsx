@@ -12,7 +12,7 @@ function ChatUser() {
 
   useEffect(() => {
     const getConversationDetails = async () => {
-        const recieveid = person.sub || person._id 
+        const recieveid = person?.sub || person?._id 
         const sendid = localAccount?._id || account?.sub
 
         let data = await getConversation({senderId : sendid, receiverId : recieveid})

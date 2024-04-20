@@ -135,12 +135,13 @@ function Messages({person, conversation}) {
     <>
         <div className='component'>
             {
-               messages && messages.map(message => (
-                  <div className='singlemessage' ref={scrollRef}>
-                    <MessageSingle message={message} />
-                  </div>
-               ))
+              messages && messages.map((message, index) => (
+                <div className='singlemessage' key={index} ref={scrollRef}>
+                  <MessageSingle message={message} />
+                </div>
+              ))
             }
+
         </div>
 
         <Footer

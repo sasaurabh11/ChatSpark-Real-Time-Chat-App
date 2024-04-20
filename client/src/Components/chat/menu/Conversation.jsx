@@ -51,7 +51,7 @@ function Conversation({ text }) {
                 return { ...friendship, users: filteredUsers };
             });
 
-            console.log(filterData)
+            // console.log(filterData)
             // console.log(filterData);
             setFriends(filterData)
         }
