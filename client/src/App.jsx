@@ -11,6 +11,8 @@ import Friend from "./Components/Friend/Friend";
 function App() {
   const clientid = import.meta.env.VITE_CLIENT_ID || '';
 
+  console.log(clientid)
+
   return (
     <GoogleOAuthProvider clientId= {clientid} >
       <AccountProvider>
