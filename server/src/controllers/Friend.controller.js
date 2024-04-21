@@ -64,34 +64,67 @@ export const getfriendRequest = async (req, res) => {
 
 export const acceptfriendrequest = async (req, res) => {
     try {
+        // const { requestId, recipientId } = req.body;
+
+        
+        // const request = await FriendRequest.findOne({sender : requestId, recipient : recipientId});
+        
+        //   if (!request) {
+        //     return res.status(404).json({ message: 'Friend request not found.' });
+        //   }
+        //   if (request.status !== 'pending') {
+        //     return res.status(400).json({ message: 'Friend request already processed.' });
+        //   }
+
+        //   if (request.recipient.toString() !== recipientId) {
+        //       return res.status(400).json({ message: 'Invalid recipient for this friend request.' });
+        //   }
+            
+        //   request.status = 'accepted';
+        //   await request.save();
+
+        // //   const existfriendShip = await Friendship.findOne({ users: {$all: [request.sender, request.recipient]} }) 
+
+        // //   if(existfriendShip) {
+        // //     return res.status(200)
+        // //     .json('FriendShip already exist')
+        // // }
+          
+        //   const friendship = new Friendship({ users: [request.sender, request.recipient] });
+        
+        // await friendship.save();
+
+        // res.status(200).json({ message: 'Friend request accepted successfully.' });
+
         const { requestId, recipientId } = req.body;
 
+        // console.log(requestId)
+        // console.log(recipientId)
+
+        const request = await FriendRequest.findOne({ sender: requestId, recipient: recipientId });
         
-        const request = await FriendRequest.findOne({sender : requestId});
-        
-          if (!request) {
+        if (!request) {
             return res.status(404).json({ message: 'Friend request not found.' });
-          }
-          if (request.status !== 'pending') {
+        }
+        if (request.status !== 'pending') {
             return res.status(400).json({ message: 'Friend request already processed.' });
-          }
+        }
 
-          if (request.recipient.toString() !== recipientId) {
-              return res.status(400).json({ message: 'Invalid recipient for this friend request.' });
-          }
+        if (request.recipient.toString() !== recipientId || request.sender.toString() !== requestId) {
+            return res.status(400).json({ message: 'Invalid sender or recipient for this friend request.' });
+        }
             
-          request.status = 'accepted';
-          await request.save();
+        request.status = 'accepted';
+        await request.save();
 
-        //   const existfriendShip = await Friendship.findOne({ users: {$all: [request.sender, request.recipient]} }) 
-
-        //   if(existfriendShip) {
-        //     return res.status(200)
-        //     .json('FriendShip already exist')
-        // }
+        // Check if friendship already exists
+        const existFriendship = await Friendship.findOne({ users: { $all: [request.sender, request.recipient] } });
+        if (existFriendship) {
+            return res.status(200).json({ message: 'Friendship already exists.' });
+        }
           
-          const friendship = new Friendship({ users: [request.sender, request.recipient] });
-        
+        // Create a new friendship
+        const friendship = new Friendship({ users: [request.sender, request.recipient] });
         await friendship.save();
 
         res.status(200).json({ message: 'Friend request accepted successfully.' });
