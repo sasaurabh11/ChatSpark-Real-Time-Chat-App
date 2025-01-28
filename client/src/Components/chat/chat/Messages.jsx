@@ -22,6 +22,16 @@ function Messages({person, conversation}) {
 
   const scrollRef = useRef()
 
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission !== "granted") {
+          console.log("Notifications disabled by user.");
+        }
+      });
+    }
+  }, []);  
+
   useEffect(() => { 
     socket.current.on('getMessage', data => {
       setIncomingMessage({
@@ -34,6 +44,27 @@ function Messages({person, conversation}) {
   useEffect(() => {
       incomingMessage && conversation?.members?.includes(incomingMessage.senderId) && 
           setMessages((prev) => [...prev, incomingMessage]);
+
+      // Show browser notification
+      console.log("notifi", Notification.permission)
+      if (Notification.permission === "granted") {
+        const senderName = person?.name || 'Unknown User';
+        const notificationOptions = {
+          body:
+            incomingMessage && incomingMessage.text,
+          icon: person?.profilePhoto || '/default-profile.png',
+        };
+
+        const notification = new Notification(
+          `New message from ${senderName}`,
+          notificationOptions
+        );
+
+        // Optional: Focus the browser window on notification click
+        notification.onclick = () => {
+          window.focus();
+        };
+      }
       
   }, [incomingMessage, conversation]);
 

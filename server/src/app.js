@@ -17,7 +17,7 @@ const io = new Server(server, {
 app.set("io", io);
 
 app.use(cors({
-    origin: [process.env.CORS_ORIGIN, 'https://chat-spark-app.vercel.app'], //here add cors for deployed link
+    origin: [process.env.CORS_ORIGIN, 'https://chat-spark-app.vercel.app'],
     // origin : process.env.CORS_ORIGIN,
     credentials: true
 }))
