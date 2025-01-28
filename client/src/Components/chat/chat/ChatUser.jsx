@@ -16,7 +16,6 @@ function ChatUser() {
         const sendid = localAccount?._id || account?.sub
 
         let data = await getConversation({senderId : sendid, receiverId : recieveid})
-        // console.log(data)
         setConversation(data) 
     }
 

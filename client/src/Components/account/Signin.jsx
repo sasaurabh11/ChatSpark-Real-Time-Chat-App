@@ -15,12 +15,9 @@ function AuthForm() {
   const {setAccount, setLocalAccount, localAccount} = useContext(AccountContext)
 
   const onLoginSuccess = async (response) => {
-    // console.log('Google login successful:', response);
     const decodedmassage = jwtDecode(response.credential)
-    console.log(decodedmassage)
     
     setAccount(decodedmassage)
-    await addUser(decodedmassage)
   };
 
   const onLoginError = (error) => {
@@ -56,16 +53,13 @@ function AuthForm() {
     event.preventDefault();
 
     if (isLogin) {
-      // console.log('Logging in with:', { email, password });
       const data = {email, password};
 
       const responseloginLocal = await loginLocal(data)
       setLocalAccount(responseloginLocal.user)
 
-      // console.log(responseloginLocal)
 
     } else {
-      // console.log('Signing up with:', {name,  email, password, profilePhoto });
       
       const formData = new FormData();
       formData.append('name', name);
@@ -79,8 +73,6 @@ function AuthForm() {
       
       const responseLocal = await signupLocal(formData);
       setLocalAccount(responseLocal.user)
-
-      // console.log('signed up with user : ' , responseLocal)
     }
   };
 

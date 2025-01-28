@@ -15,7 +15,6 @@ export const addUser = async (data) => {
 export const getUser = async() => {
     try {
         let response = await axios.get(`${url}/api/v1/user/getuser`);
-        // console.log("get user response ", response)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)
@@ -51,7 +50,6 @@ export const newMassage = async(data) => {
 export const getMessage = async(id) => {
     try {
         let response = await axios.get(`${url}/api/v1/user/message/get/${id}`);
-        // console.log(response)
         return response.data;
     } catch (error) {
         console.error('error while calling getmessage api', error.message)
@@ -74,7 +72,6 @@ export const signupLocal = async (formData) => {
             }
         });
         
-        // console.log('Signup response:', response.data);
         return response.data;
 
     } catch (error) {
@@ -85,7 +82,6 @@ export const signupLocal = async (formData) => {
 export const loginLocal = async (data) => {
     try {
         let response = await axios.post(`${url}/api/v1/user/loginlocal`, data);
-        // console.log("response in api ", response.data)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)
@@ -95,7 +91,6 @@ export const loginLocal = async (data) => {
 export const getInfoLocalAccount = async () => {
     try {
         let response = await axios.get(`${url}/api/v1/user/getalluserlocal`);
-        // console.log(response.data)
         return response.data;
     } catch (error) {
         console.error('error while calling getuser api', error.message)
@@ -121,7 +116,6 @@ export const acceptanceforfriendShip = async (data) => {
 export const fetchAllRequests = async (requestId) => {
     try {
         let response = await axios.get(`${url}/api/v1/user/get-friend-request/${requestId}`);
-        // console.log("response", response);
         return response.data;
     } catch (error) {
         console.error('error while calling fetchAllRequests api', error.message);

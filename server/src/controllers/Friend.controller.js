@@ -42,7 +42,6 @@ export const getfriendRequest = async (req, res) => {
     try {
         const recipientId = req.params.requestId
 
-        // console.log("recientp: ", recipientId)
         const friendRequests = await FriendRequest.find({ recipient: recipientId });
 
         const pendingRequests = friendRequests.filter(request => request.status === 'pending');
@@ -97,9 +96,6 @@ export const acceptfriendrequest = async (req, res) => {
         // res.status(200).json({ message: 'Friend request accepted successfully.' });
 
         const { requestId, recipientId } = req.body;
-
-        // console.log(requestId)
-        // console.log(recipientId)
 
         const request = await FriendRequest.findOne({ sender: requestId, recipient: recipientId });
         

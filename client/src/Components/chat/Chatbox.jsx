@@ -18,14 +18,10 @@ const dialogStyle = {
     maxHeight: '100%',
     boxShadow: 'none',
     overflow: 'hidden',
-    // backgroundColor: '#847575'
-    // backgroundColor: '#c4c2c2'
-    // backgroundColor: 'aqua'
 }
 
 function Chatbox() {
   const {person} = useContext(AccountContext)
-  // console.log(person)
 
   return (
     // <>
@@ -36,7 +32,6 @@ function Chatbox() {
         maxWidth={'md'}
     >
         <div className='chat-section'>
-          {/* <AcceptfriendRequest requestId="661fae2ee80e7a06f2319291" /> */}
 
             <div>
               <LeftIcons/>

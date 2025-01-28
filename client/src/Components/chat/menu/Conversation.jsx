@@ -51,8 +51,6 @@ function Conversation({ text }) {
                 return { ...friendship, users: filteredUsers };
             });
 
-            // console.log(filterData)
-            // console.log(filterData);
             setFriends(filterData)
         }
 
@@ -62,11 +60,8 @@ function Conversation({ text }) {
     useEffect(() => {
         const accountTosendSocket = account || localAccount
 
-        // console.log("accont to send", accountTosendSocket)
-
         socket.current.emit("addUsers", accountTosendSocket);
         socket.current.on("getUsers", (users) => {
-            // console.log("users", users)
             setActiveUser(users);
         });
     }, [account]);

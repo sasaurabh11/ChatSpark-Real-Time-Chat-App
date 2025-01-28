@@ -46,7 +46,6 @@ function Messages({person, conversation}) {
           setMessages((prev) => [...prev, incomingMessage]);
 
       // Show browser notification
-      console.log("notifi", Notification.permission)
       if (Notification.permission === "granted") {
         const senderName = person?.name || 'Unknown User';
         const notificationOptions = {
@@ -75,7 +74,6 @@ function Messages({person, conversation}) {
   useEffect(() => {
     const getMessageDetails = async () => {
       let data = await getMessage(conversation._id)
-      // console.log(data)
       setMessages(data)
     }
     conversation._id && getMessageDetails();
@@ -87,8 +85,6 @@ function Messages({person, conversation}) {
       let massage = {}
 
     //   if(!file) {
-
-    //     console.log(account)
 
     //     const accountValue = account?.sub || account?._id
     //     const personvalue = person?.sub || person?._id
@@ -128,9 +124,6 @@ function Messages({person, conversation}) {
     // }
 
       if (!file) {
-        // console.log("account", account);
-        // console.log( "local", localAccount);
-
         const accountValue = account?.sub || (localAccount && localAccount._id);
         const personValue = person?.sub || (person && person._id);
 

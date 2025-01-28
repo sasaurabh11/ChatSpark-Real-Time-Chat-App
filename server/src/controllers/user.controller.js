@@ -2,7 +2,6 @@
 import { User } from "../model/user.model.js";
 
 export const addUser = async (req, res) => {
-    // console.log(req)
     try {
         let existedUser = await User.findOne({sub : req.body.sub})
 
@@ -17,8 +16,6 @@ export const addUser = async (req, res) => {
 
         const newUser = new User(req.body)
         await newUser.save()
-
-        console.log(newUser)
 
         return res.status(200)
         .json({
