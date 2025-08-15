@@ -6,9 +6,11 @@ import { AccountContext } from "../../../ContextApi/AccountProvide";
 
 function Conversation({ text }) {
     const [friends, setFriends] = useState([]);
+    const {selectedLang, setSelectedLang} = useContext(AccountContext)
     const { account, socket, setActiveUser, localAccount } = useContext(AccountContext);
 
     useEffect(() => {
+        if (!selectedLang) return; 
         const fetchData = async () => {
             const requestId = account?.sub || localAccount?._id;
             const response = await getFriendsDetails(requestId);
@@ -24,15 +26,48 @@ function Conversation({ text }) {
         };
 
         fetchData();
-    }, [text]);
+    }, [text, selectedLang]);
 
     useEffect(() => {
+        if (!selectedLang) return; 
         const accountTosendSocket = account || localAccount;
-        socket.current.emit("addUsers", accountTosendSocket);
+
+        socket.current.emit("addUsers", {
+            ...accountTosendSocket,
+            preferredLang: selectedLang
+        });
+
         socket.current.on("getUsers", (users) => {
             setActiveUser(users);
         });
-    }, [account]);
+    }, [account, selectedLang]);
+
+    if (!selectedLang) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+                <div className="relative z-10 bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
+                    <h2 className="text-xl mb-4 text-white text-center">Select Your Language</h2>
+                    <select
+                        className="p-2 bg-gray-700 rounded w-full text-white mb-4"
+                        onChange={(e) => {
+                            setSelectedLang(e.target.value);
+                            localStorage.setItem("preferredLang", e.target.value);
+                        }}
+                    >
+                        <option value="">-- Choose Language --</option>
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                    </select>
+                    <p className="text-gray-400 text-sm text-center">
+                        Select your preferred language to continue
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="overflow-y-auto h-full">

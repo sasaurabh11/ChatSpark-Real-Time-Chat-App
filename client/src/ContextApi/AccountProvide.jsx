@@ -10,12 +10,13 @@ const AccountProvider = ({children}) => {
     const [activeUser, setActiveUser] = useState([])
     const [newMessageFlag, setNewMessageFlage] = useState(false)
     const [localAccount, setLocalAccount] = useState(null);
+    const [selectedLang, setSelectedLang] = useState(""); 
       
     const socket = useRef()
 
     useEffect(() => {
-        // socket.current = io('ws://localhost:8000');
-        socket.current = io('wss://chatspark-real-time-chat-app-api.onrender.com');
+        socket.current = io('ws://localhost:8000');
+        // socket.current = io('wss://chatspark-real-time-chat-app-api.onrender.com');
     }, [])
 
     useEffect(() => {
@@ -33,6 +34,15 @@ const AccountProvider = ({children}) => {
         }
     }, [localAccount]);
 
+    const logout = () => {
+        setAccount(null);
+        setPerson({});
+        setLocalAccount(null); 
+        setActiveUser([]);
+        socket.current?.disconnect();
+    };
+
+
     return (
         <AccountContext.Provider
             value={{
@@ -41,7 +51,9 @@ const AccountProvider = ({children}) => {
                 person, setPerson,
                 newMessageFlag, setNewMessageFlage,
                 socket,
-                activeUser, setActiveUser
+                activeUser, setActiveUser,
+                logout,
+                setSelectedLang, selectedLang
             }}
         >
             {children}

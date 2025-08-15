@@ -37,7 +37,13 @@ const MessageSingle = ({ message }) => {
 
 const TextMessage = ({ message }) => (
   <div className="text-white">
-    <p className="text-sm">{message.text}</p>
+    {
+      message.translatedText ? (
+        <p className="text-sm">{message.translatedText}</p>
+      ) : (
+        <p className="text-sm">{message.text}</p>
+      )
+    }
     <p className="text-xs text-gray-300 text-right mt-1">
       {formatDate(message.createdAt)}
     </p>

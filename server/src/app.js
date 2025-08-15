@@ -3,6 +3,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { translateText } from './utills/translator.js';
 
 const app = express();
 const server = createServer(app);
@@ -53,9 +54,19 @@ io.on('connection', (socket) => {
     })
 
     //send message
-    socket.on('sendMessage', (data) => {
+    socket.on('sendMessage', async(data) => {
+        const sourceLang = data.selectedLang || 'en'
         const user = getUser(data.receiverId);
-        io.to(user?.socketId).emit('getMessage', data)
+        if (!user) return;
+
+        const targetLang = user.preferredLang || 'en';
+        let translatedText = data.text;
+
+        if (targetLang !== sourceLang) {
+            translatedText = await translateText(translatedText, sourceLang, targetLang);
+            console.log(translatedText)
+        }
+        io.to(user?.socketId).emit('getMessage', {...data, translatedText})
     })
 
     //disconnect

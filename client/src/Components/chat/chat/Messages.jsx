@@ -5,7 +5,7 @@ import { AccountContext } from "../../../ContextApi/AccountProvide";
 import { newMassage, getMessage } from "../../../Service/api";
 
 function Messages({ person, conversation }) {
-  const { account, localAccount, socket, newMessageFlag, setNewMessageFlage } =
+  const { account, localAccount, socket, newMessageFlag, setNewMessageFlage, selectedLang } =
     useContext(AccountContext);
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
@@ -79,6 +79,7 @@ function Messages({ person, conversation }) {
 
       const message = {
         senderId: accountValue,
+        selectedLang: selectedLang,
         receiverId: personValue,
         conversationId: conversation._id,
         type: file ? "file" : "text",
