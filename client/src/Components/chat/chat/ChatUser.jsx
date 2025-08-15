@@ -26,9 +26,9 @@ function ChatUser() {
   }, [person?.sub, person?._id]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-800">
+    <div className="flex flex-col h-full bg-gray-900">
       <ChatHeader person={person} />
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <Messages person={person} conversation={conversation} />
       </div>
     </div>

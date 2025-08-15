@@ -8,8 +8,6 @@ import { AccountContext } from "../ContextApi/AccountProvide"
 const Messenger = () => {
   const { account, localAccount } = useContext(AccountContext);
 
-  console.log("local", localAccount)
-
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
       {account || localAccount ? (
