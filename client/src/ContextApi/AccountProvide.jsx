@@ -9,7 +9,7 @@ const AccountProvider = ({children}) => {
     const [person, setPerson] = useState({})
     const [activeUser, setActiveUser] = useState([])
     const [newMessageFlag, setNewMessageFlage] = useState(false)
-    const [localAccount, setLocalAccount] = useState();
+    const [localAccount, setLocalAccount] = useState(null);
       
     const socket = useRef()
 
@@ -17,6 +17,21 @@ const AccountProvider = ({children}) => {
         // socket.current = io('ws://localhost:8000');
         socket.current = io('wss://chatspark-real-time-chat-app-api.onrender.com');
     }, [])
+
+    useEffect(() => {
+        const storedAccount = localStorage.getItem("localAccount");
+        if (storedAccount) {
+            setLocalAccount(JSON.parse(storedAccount));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (localAccount) {
+            localStorage.setItem("localAccount", JSON.stringify(localAccount));
+        } else {
+            localStorage.removeItem("localAccount"); // optional cleanup
+        }
+    }, [localAccount]);
 
     return (
         <AccountContext.Provider

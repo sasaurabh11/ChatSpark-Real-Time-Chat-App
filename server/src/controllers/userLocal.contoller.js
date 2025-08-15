@@ -95,9 +95,12 @@ const loginUserLocal = async (req, res) => {
         }
 
         const isValidPassword = await user.isPasswordCorrect(password)
-
+        
         if(!isValidPassword) {
-            throw new ApiError(401, "Invalid User Credentials")
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid User Credentials'
+            })
         }
 
         // if(password !== user.password) {
@@ -125,7 +128,8 @@ const loginUserLocal = async (req, res) => {
             }
         )
     } catch (error) {
-        
+        console.error('Error during local login:', error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
 }
 

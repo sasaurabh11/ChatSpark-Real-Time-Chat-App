@@ -1,55 +1,47 @@
-import { styled, Drawer, Box, Typography } from '@mui/material';
+import { Drawer } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-
 import Profile from './Profile';
 
-const Header = styled(Box)`
-background: #008069;
-height: 107px;
-color: #FFFFFF;
-display: flex;
-& > svg, & > p {
-  margin-top: auto;
-  padding: 15px;
-  font-weight: 600;
-`;
-
-const Component = styled(Box)`
-background: #ededed;
-height: 85%;
-`;
-
-const Text = styled(Typography)`
-  font-size: 18px;
-`
-
-const DrawerStyle = {
-  left: 20,
-  top: 18,
-  height: "95%",
-  width: "30%",
-  boxShadow: "none",
-};
-
-function InfoDrawer({ open, setOpen}) {
-  const handleclosedrawer = () => {
+function InfoDrawer({ open, setOpen }) {
+  const handleCloseDrawer = () => {
     setOpen(false);
   };
 
   return (
     <Drawer
       open={open}
-      onClose={handleclosedrawer}
-      PaperProps={{ sx: DrawerStyle }}
+      onClose={handleCloseDrawer}
+      PaperProps={{
+        sx: {
+          width: '380px',
+          height: '100vh',
+          boxShadow: 'xl',
+          backgroundColor: 'rgb(31, 41, 55)',
+          borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+          position: 'absolute',
+          left: '20px',
+          top: '18px'
+        }
+      }}
       style={{ zIndex: 1500 }}
     >
-        <Header>
-            <ArrowBack onClick={() => setOpen(false)} />
-            <Text>Profile</Text>
-        </Header>
-        <Component>
-            <Profile/>
-        </Component>
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="bg-indigo-700 px-4 py-6 flex items-center space-x-4">
+          <button 
+            onClick={handleCloseDrawer}
+            className="p-2 rounded-full hover:bg-indigo-600 transition-colors"
+          >
+            <ArrowBack className="text-white" />
+          </button>
+          <h2 className="text-xl font-semibold text-white">Profile</h2>
+        </div>
+        
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto">
+          <Profile />
+        </div>
+      </div>
     </Drawer>
   );
 }

@@ -1,55 +1,38 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom"
 import LoginBox from "./account/LoginBox"
-import {AppBar, Toolbar, styled} from "@mui/material"
+import { AppBar, Toolbar, styled } from "@mui/material"
 import Chatbox from "./chat/Chatbox"
-import './Messenger.css'
-
 import { useContext } from "react"
 import { AccountContext } from "../ContextApi/AccountProvide"
 
-const LoginHeader = styled(AppBar) `
-    height: 220px;
-    background-color: #d2b48c;
-`
-
-const ChatHeader = styled(AppBar) `
-    height: 130px;
-    background-color: #e3c8a1;
-` 
-
-function Messenger() {
+const Messenger = () => {
   const { account, localAccount } = useContext(AccountContext);
 
+  console.log("local", localAccount)
+
   return (
-    // yaha pe check karke chatbox ko chalana hai ki user login hai ya nahi
-    // context ki help se check karna hai
-    <>
-      {
-          account || localAccount ? 
-                // <NavLink
-                //     to="/chats"
-                // >
-                    <div className="login-section">
-                        <ChatHeader> 
-                            <Toolbar>
-
-                            </Toolbar>
-                        </ChatHeader>
-
-                        <Chatbox /> 
-                    </div>
-            //   </NavLink>
-          :
-              <div className="login-section">
-                <LoginHeader>
-                    <Toolbar>
-
-                    </Toolbar>
-                </LoginHeader>
-                <LoginBox />
-            </div>
-      }
-    </>
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
+      {account || localAccount ? (
+        // Chat Interface
+        <div className="flex flex-col flex-1">          
+          <div className="flex-1 overflow-hidden">
+            <Chatbox />
+          </div>
+        </div>
+      ) : (
+        // Login Interface
+        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+          
+          <div className="w-full max-w-md mt-8 p-8 bg-gray-800 rounded-lg shadow-xl">
+            <LoginBox />
+          </div>
+          
+          <footer className="mt-12 text-gray-500 text-sm">
+            <p>© {new Date().getFullYear()} Messenger. All rights reserved.</p>
+          </footer>
+        </div>
+      )}
+    </div>
   )
 }
 

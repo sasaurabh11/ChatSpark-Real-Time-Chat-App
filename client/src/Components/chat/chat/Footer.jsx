@@ -1,91 +1,92 @@
 import { useEffect, useState } from 'react';
+import { EmojiEmotions, AttachFile, Mic, Send } from '@mui/icons-material';
 
-import { EmojiEmotions, AttachFile, Mic } from '@mui/icons-material';
-import { Box, styled, InputBase } from '@mui/material';
+import { uploadFile } from '../../../Service/api';
 
-import {uploadFile} from '../../../Service/api'
+const Footer = ({ sendText, value, setValue, setFile, setImage, file }) => {
+  const [isTyping, setIsTyping] = useState(false);
 
-const Container = styled(Box)`
-    height: 55px;
-    background: #ededed;
-    width: 97%;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    &  > * {
-        margin: 5px;
-        color: #919191;
-    }
-`;
+  useEffect(() => {
+    const handleImageUpload = async () => {
+      if (file) {
+        const data = new FormData();
+        data.append("name", file.name);
+        data.append("file", file);
 
-const Search = styled(Box)`
-    border-radius: 18px;
-    background-color: #FFFFFF;
-    width: calc(94% - 100px);
-`;
-
-const InputField = styled(InputBase)`
-    width: 100%;
-    padding: 20px;
-    padding-left: 25px;
-    font-size: 14px;
-    height: 20px;
-    width: 100%;
-`;
-
-const ClipIcon = styled(AttachFile)`
-    transform: 'rotate(40deg)',
-    cursor: 'pointer'
-`;
-
-
-const Footer = ({ sendText, value,  setValue, setFile, file, setImage }) => {
-
-    useEffect(() => {
-        const getImage = async () => {
-            if (file) {
-                const data = new FormData();
-                data.append("name", file.name);
-                data.append("file", file);
-
-                const response = await uploadFile(data);
-                setImage(response.data);
-            }
+        try {
+          const response = await uploadFile(data);
+          setImage(response.data);
+          setValue(''); // Clear text input when file is selected
+        } catch (error) {
+          console.error("Error uploading file:", error);
         }
-        getImage();
-    }, [file])
+      }
+    };
+    handleImageUpload();
+  }, [file]);
 
-    const onFileChange = (e) => {
-        setValue(e.target.files[0].name);
-        setFile(e.target.files[0]);
+  const onFileChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      setIsTyping(false);
     }
+  };
 
-    return (
-        <Container>
-            <EmojiEmotions />
-            
-            <label htmlFor="fileInput">
-                <ClipIcon />
-            </label>
-            <input
-                type='file'
-                id="fileInput"
-                style={{ display: 'none'}}
-                onChange={(e) => onFileChange(e)}
-            />
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendText(e);
+    }
+  };
 
-            <Search>
-                <InputField
-                    placeholder="Type a message"
-                    inputProps={{ 'aria-label': 'search', style: { border: 'none' } }}
-                    onChange={(e) => setValue(e.target.value)}
-                    onKeyPress={(e) => sendText(e)}
-                    value={value}
-                />
-            </Search>
-            <Mic />
-        </Container>
-    )
-}
+  return (
+    <div className="flex items-center p-2 bg-gray-700 border-t border-gray-600">
+      {/* Emoji Button */}
+      <button className="p-2 text-gray-400 hover:text-indigo-400 rounded-full hover:bg-gray-600 transition-colors">
+        <EmojiEmotions />
+      </button>
+
+      {/* File Attachment Button */}
+      <label className="p-2 text-gray-400 hover:text-indigo-400 rounded-full hover:bg-gray-600 transition-colors cursor-pointer">
+        <AttachFile className="transform rotate-45" />
+        <input
+          type="file"
+          className="hidden"
+          onChange={onFileChange}
+          accept="image/*, .pdf"
+        />
+      </label>
+
+      {/* Message Input */}
+      <div className="flex-1 mx-2">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            className="w-full py-3 px-4 bg-gray-600 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-12"
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              setIsTyping(e.target.value.length > 0);
+            }}
+            onKeyPress={handleKeyPress}
+          />
+          {isTyping ? (
+            <button 
+              onClick={sendText}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-indigo-400 hover:text-indigo-300"
+            >
+              <Send />
+            </button>
+          ) : (
+            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-300">
+              <Mic />
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Footer;

@@ -1,69 +1,61 @@
 import { useContext } from "react";
-import { Box, styled, Typography } from "@mui/material";
-
 import { AccountContext } from "../../ContextApi/AccountProvide";
-
-const ImageContainer = styled(Box)`
-  display: flex;
-  justify-content: center;
-`;
-
-const Image = styled("img")({
-    width: 200,
-    height: 200,
-    borderRadius: "50%",
-    padding: "25px 0",
-});
-
-const BoxWrapper = styled(Box)`
-  background: #ffffff;
-  padding: 12px 30px 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  & :first-child {
-    font-size: 13px;
-    color: #009688;
-    font-weight: 200;
-  }
-  & :last-child {
-    margin: 14px 0;
-    color: #4a4a4a;
-  }
-`;
-
-const DescriptionContainer = styled(Box)`
-  padding: 15px 20px 28px 30px;
-  & > p {
-    color: #8696a0;
-    font-size: 13px;
-  }
-`;
 
 const Profile = () => {
     const { account, localAccount } = useContext(AccountContext);
-
     const profilePicture = account?.picture || localAccount?.profilePhoto;
     const profileName = account?.name || localAccount?.name;
+    const profileEmail = account?.email || localAccount?.email;
 
     return (
-        <>
-            <ImageContainer>
-                <Image src={profilePicture} alt="displaypicture" />
-            </ImageContainer>
-            <BoxWrapper>
-                <Typography>Your name</Typography>
-                <Typography>{profileName}</Typography>
-            </BoxWrapper>
-            <DescriptionContainer>
-                <Typography>
-                    This is not your username or pin. This name will be visible to your
-                    WhatsApp contacts.
-                </Typography>
-            </DescriptionContainer>
-            <BoxWrapper>
-                <Typography>About</Typography>
-                <Typography>Noting</Typography>
-            </BoxWrapper>
-        </>
+        <div className="p-6 text-gray-100">
+            {/* Profile Picture */}
+            <div className="flex justify-center mb-6">
+                <div className="relative">
+                    <img 
+                        src={profilePicture} 
+                        alt="Profile" 
+                        className="w-40 h-40 rounded-full object-cover border-4 border-indigo-500/30"
+                    />
+                    <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                </div>
+            </div>
+
+            {/* Profile Info Sections */}
+            <div className="space-y-6">
+                {/* Name Section */}
+                <div className="bg-gray-700 rounded-lg p-4">
+                    <p className="text-sm text-gray-400 mb-1">Your name</p>
+                    <p className="text-lg font-medium">{profileName}</p>
+                </div>
+
+                {/* About Section */}
+                <div className="bg-gray-700 rounded-lg p-4">
+                    <p className="text-sm text-gray-400 mb-1">About</p>
+                    <p className="text-gray-300">Hey there! I'm using ChatSpark</p>
+                </div>
+
+                {/* Email Section */}
+                {profileEmail && (
+                    <div className="bg-gray-700 rounded-lg p-4">
+                        <p className="text-sm text-gray-400 mb-1">Email</p>
+                        <p className="text-gray-300">{profileEmail}</p>
+                    </div>
+                )}
+
+                {/* Info Note */}
+                <div className="text-xs text-gray-400 p-4 bg-gray-800/50 rounded-lg">
+                    This is not your username or pin. This name will be visible to your contacts.
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-4 pt-4">
+                    <button className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
+                        Edit Profile
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 

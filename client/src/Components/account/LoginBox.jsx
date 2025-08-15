@@ -1,27 +1,28 @@
-import {Dialog} from '@mui/material';
+import { Dialog } from '@mui/material';
 import SignIn from './Signin';
-
-const dialogStyle = {
-    height : '85%',
-    marginTop : '3rem',
-    width : '60%',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    boxShadow: 'none',
-    overflow: 'hidden',
-    backgroundColor: '#e6f2ff'
-} 
 
 function LoginBox() {
   return (
     <Dialog
-        open = {true}
-        PaperProps={{sx : dialogStyle}}
-        hideBackdrop={true}
+      open={true}
+      PaperProps={{
+        sx: {
+          width: '90%',
+          maxWidth: '450px',
+          height: 'auto',
+          maxHeight: '90vh',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          backgroundColor: 'rgb(31, 41, 55)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
+        }
+      }}
+      hideBackdrop={true}
     >
-        <SignIn/>
+      <SignIn />
     </Dialog>
   )
 }
 
-export default LoginBox
+export default LoginBox;

@@ -1,115 +1,84 @@
 import { useContext } from 'react';
-
-import { Box, styled, Typography } from '@mui/material';
 import { GetApp as GetAppIcon } from '@mui/icons-material';
-
 import { AccountContext } from '../../../ContextApi/AccountProvide';
-
 import { downloadMedia, formatDate } from '../../../Utills/commonUtills';
-// import { iconPDF } from '../../../constants/data';
-import './MessageSingle.css'
-
-const Wrapper = styled(Box)`
-    background: #FFFFFF;
-    padding: 5px;
-    max-width: 60%;
-    width: fit-content;
-    display: flex;
-    border-radius: 10px;
-    word-break: break-word;
-`;
-    
-const Own = styled(Box)`
-    background: #dcf8c6;
-    padding: 5px;
-    max-width: 55%;
-    width: fit-content;
-    margin-left: auto;
-    display: flex;
-    border-radius: 10px;
-    word-break: break-word;
-`;
-
-const Text = styled(Typography)`
-    font-size: 14px;
-    padding: 0 25px 0 5px;
-`;
-
-const Time = styled(Typography)`
-    font-size: 10px;
-    color: #919191;
-    margin-top: 6px;
-    word-break: keep-all;
-    margin-top: auto;
-`;
 
 const MessageSingle = ({ message }) => {
-    const { account, localAccount, person } = useContext(AccountContext);
+  const { account, localAccount, person } = useContext(AccountContext);
+  const accountValue = account?.sub || localAccount?._id;
+  const isOwnMessage = accountValue === message.senderId;
 
-    const accountValue = account?.sub || localAccount?._id
-    const profilePicture = account?.picture || localAccount?.profilePhoto;
-    const personPicture = person?.picture || person?.profilePhoto;
-
-    return (
-        <>
-        {
-            accountValue === message.senderId ? 
-                <Own>
-                    {
-                        message.type === 'file' ? <ImageMessage message={message} /> : <TextMessage message={message} />
-                    }
-                    <div className="profilePictureContainer">
-                            <img className='ppformsg' src={profilePicture} alt="dp" />
-                    </div>
-                </Own>
-            : 
-                <Wrapper>
-                    <div className='profilePictureContainer'>
-                        <img className='ppformsg' src={personPicture} alt="persondp" />
-                    </div>
-                    {
-                        message.type === 'file' ? <ImageMessage message={message} /> : <TextMessage message={message} />
-                    }
-                </Wrapper>
-        }
-        
-        </>
-    )
-}
-
-const TextMessage = ({ message }) => {
-    
-    return (
-        <>
-            <Text>{message.text}</Text>
-            <Time>{formatDate(message.createdAt)}</Time>
-        </>
-    )
-}
-
-const ImageMessage = ({ message }) => {
-
-    return (
-        <div style={{ position: 'relative' }}>
-            {
-                message?.text?.includes('.pdf') ?
-                    <div style={{ display: 'flex' }}>
-                        <img src={iconPDF} alt="pdf-icon" style={{ width: 80 }} />
-                        <Typography style={{ fontSize: 14 }} >{message.text.split("/").pop()}</Typography>
-                    </div>
-                : 
-                    <img style={{ width: 300, height: '100%', objectFit: 'cover' }} src={message.text} alt={message.text} />
-            }
-            <Time style={{ position: 'absolute', bottom: 0, right: 0 }}>
-                <GetAppIcon 
-                    onClick={(e) => downloadMedia(e, message.text)} 
-                    fontSize='small' 
-                    style={{ marginRight: 10, border: '1px solid grey', borderRadius: '50%' }} 
-                />
-                {formatDate(message.createdAt)}
-            </Time>
+  return (
+    <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-3`}>
+      <div className={`flex max-w-xs md:max-w-md lg:max-w-lg ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+        {/* Profile Picture */}
+        <div className="flex-shrink-0 h-8 w-8 rounded-full overflow-hidden m-1">
+          <img 
+            src={isOwnMessage 
+              ? account?.picture || localAccount?.profilePhoto 
+              : person?.picture || person?.profilePhoto} 
+            alt="Profile" 
+            className="h-full w-full object-cover"
+          />
         </div>
-    )
-}
+        
+        {/* Message Content */}
+        <div className={`rounded-lg px-4 py-2 ${isOwnMessage ? 'bg-indigo-600' : 'bg-gray-700'}`}>
+          {message.type === 'file' ? (
+            <FileMessage message={message} />
+          ) : (
+            <TextMessage message={message} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TextMessage = ({ message }) => (
+  <div className="text-white">
+    <p className="text-sm">{message.text}</p>
+    <p className="text-xs text-gray-300 text-right mt-1">
+      {formatDate(message.createdAt)}
+    </p>
+  </div>
+);
+
+const FileMessage = ({ message }) => {
+  const isPDF = message?.text?.includes('.pdf');
+  
+  return (
+    <div className="relative">
+      {isPDF ? (
+        <div className="flex items-center bg-gray-800 p-2 rounded">
+          <span className="text-white text-sm">PDF File</span>
+          <button 
+            onClick={(e) => downloadMedia(e, message.text)}
+            className="ml-2 text-gray-300 hover:text-white"
+          >
+            <GetAppIcon fontSize="small" />
+          </button>
+        </div>
+      ) : (
+        <div className="relative group">
+          <img 
+            src={message.text} 
+            alt="Media" 
+            className="max-h-60 rounded-lg object-cover"
+          />
+          <button 
+            onClick={(e) => downloadMedia(e, message.text)}
+            className="absolute bottom-2 right-2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <GetAppIcon fontSize="small" />
+          </button>
+        </div>
+      )}
+      <p className="text-xs text-gray-300 text-right mt-1">
+        {formatDate(message.createdAt)}
+      </p>
+    </div>
+  );
+};
 
 export default MessageSingle;

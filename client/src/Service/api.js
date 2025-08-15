@@ -81,6 +81,7 @@ export const signupLocal = async (formData) => {
 
 export const loginLocal = async (data) => {
     try {
+        console.log(data)
         let response = await axios.post(`${url}/api/v1/user/loginlocal`, data);
         return response.data;
     } catch (error) {
