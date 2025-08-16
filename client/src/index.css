@@ -24,3 +24,10 @@ code {
 ::-webkit-scrollbar-track {
   background: hsla(0,0%,100%,.1);
 }
+
+/* put this in your global stylesheet */
+.transliterate-container .react-transliterate-dropdown {
+  top: auto !important;       /* cancel inline top */
+  bottom: 100% !important;    /* attach above the input */
+  margin-bottom: 8px !important; /* gap between input & dropdown */
+}

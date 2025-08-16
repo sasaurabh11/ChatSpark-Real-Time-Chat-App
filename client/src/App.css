@@ -41,3 +41,10 @@
 .read-the-docs {
   color: #888;
 } */
+
+/* put this in your global stylesheet */
+.transliterate-container .react-transliterate-dropdown {
+  top: auto !important;       /* cancel inline top */
+  bottom: 100% !important;    /* attach above the input */
+  margin-bottom: 8px !important; /* gap between input & dropdown */
+}
