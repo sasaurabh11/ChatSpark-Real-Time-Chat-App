@@ -8,7 +8,6 @@ import RequestNotification from "./Components/Friend/RequestNotification";
 import Friend from "./Components/Friend/Friend";
 import CallProvider from "./ContextApi/CallProvider";
 import CallUI from "./Components/Webrtc/CallUI";
-import CallTest from "./Components/Webrtc/testUI";
 
 function App() {
   const clientid = import.meta.env.VITE_CLIENT_ID || "";
@@ -17,7 +16,7 @@ function App() {
     <GoogleOAuthProvider clientId={clientid}>
       <AccountProvider>
         <CallProvider>
-          {/* <BrowserRouter>
+          <BrowserRouter>
             <div className="fixed inset-0 bg-gray-900 overflow-y-auto">
               <Routes>
                 <Route path="/" element={<Messenger />} />
@@ -29,12 +28,8 @@ function App() {
               </Routes>
               <CallUI />
             </div>
-          </BrowserRouter> */}
-          <div>
-        <CallTest />
+          </BrowserRouter>
         <CallUI />
-        {/* Your other components */}
-      </div>
         </CallProvider>
       </AccountProvider>
     </GoogleOAuthProvider>

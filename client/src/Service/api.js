@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const url = 'https://chatspark-real-time-chat-app-api.onrender.com'
-// const url = 'http://localhost:8000'
+// const url = 'https://chatspark-real-time-chat-app-api.onrender.com'
+const url = 'http://localhost:8000'
 
 export const addUser = async (data) => {
     try {

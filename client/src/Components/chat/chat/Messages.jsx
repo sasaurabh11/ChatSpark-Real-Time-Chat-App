@@ -3,7 +3,6 @@ import Footer from "./Footer";
 import MessageSingle from "./MessageSingle";
 import { AccountContext } from "../../../ContextApi/AccountProvide";
 import { newMassage, getMessage } from "../../../Service/api";
-import CallButtons from "../../Webrtc/CallButtons";
 
 function Messages({ person, conversation }) {
   const {
@@ -114,7 +113,6 @@ function Messages({ person, conversation }) {
   return (
     <div className="flex flex-col h-full bg-gray-800">
       {/* Message list */}
-      <CallButtons conversation={conversation} />
       <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
         {messages.map((message, index) => (
           <div

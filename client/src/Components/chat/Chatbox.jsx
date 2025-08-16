@@ -19,7 +19,7 @@ function Chatbox() {
       </div>
 
       {/* Menu/Contacts Section */}
-      <div className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col flex-shrink-0">
+      <div className="hidden md:flex w-80 bg-gray-800 border-r border-gray-700  flex-col flex-shrink-0">
         <Menu />
       </div>
 
@@ -36,7 +36,7 @@ function Chatbox() {
 
       {/* Right Drawer (when person is selected) */}
       {Object.keys(person).length > 0 && (
-        <div className="w-72 bg-gray-800 border-l border-gray-700 flex-shrink-0">
+        <div className="hidden md:flex w-72 bg-gray-800 border-l border-gray-700 flex-shrink-0">
           <RightPersonDrawer />
         </div>
       )}
