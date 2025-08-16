@@ -15,67 +15,54 @@ import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import { AccountContext } from '../../../ContextApi/AccountProvide';
 import { NavLink } from 'react-router-dom';
 
-function LeftIcons() {
-  const { account,  localAccount} = useContext(AccountContext);
-
+function LeftIcons({ toggleMenu }) {
+  const { account, localAccount } = useContext(AccountContext);
   const [drawer, setDrawer] = useState(false);
-
-  const handleDrawer = () => {
-    setDrawer(!drawer) 
-  }
 
   const profilePicture = account?.picture || localAccount?.profilePhoto;
 
   return (
-    <div>
-        {/* {profilePicture && ( 
-          <img src={profilePicture} alt="dp" onClick={handleDrawer} />
-        )}
-
-        <InfoDrawer open = {drawer} setOpen = {setDrawer}/> */}
-
-        <div className='left-design'>
-
-          <div className='upper-left-design'>
-            <WhatsAppIcon/>
-              <p style={{marginTop: '-3px'}}>Chats</p>
-              <NavLink
-                to='/add-friends'
-              >
-                <PersonAddIcon />
-              </NavLink>
-              <p style={{marginTop: '-3px'}}>Users</p>
-
-              <CallIcon/>
-              <p style={{marginTop: '-3px'}}>Calls</p>
-              {/* <DataSaverOffIcon/> */}
-          </div>
-
-          <div className='lower-left-design'>
-
-              {/* <StarOutlineIcon/> */}
-              <NavLink
-                to='/notifications'
-              >
-                  <CircleNotificationsIcon/>
-              </NavLink>
-              <p style={{marginTop: '-3px'}}>Updates</p>
-
-              {/* <ArchiveIcon/> */}
-              <SettingsIcon/>
-              <p style={{marginTop: '-3px'}}>Setting</p>
-
-              {profilePicture && ( 
-                <img src={profilePicture} alt="dp" onClick={handleDrawer} />
-              )}
-
-
-              <InfoDrawer open = {drawer} setOpen = {setDrawer}/>
-
-          </div>
+    <div className="left-design">
+      <div className="upper-left-design">
+        <div onClick={toggleMenu} className="cursor-pointer flex flex-col items-center">
+          <WhatsAppIcon />
+          <p style={{ marginTop: "-3px" }}>Chats</p>
         </div>
+
+        <NavLink to="/add-friends" className="flex flex-col items-center">
+          <PersonAddIcon />
+          <p style={{ marginTop: "-3px" }}>Users</p>
+        </NavLink>
+
+        <div className="flex flex-col items-center">
+          <CallIcon />
+          <p style={{ marginTop: "-3px" }}>Calls</p>
+        </div>
+      </div>
+
+      <div className="lower-left-design">
+        <NavLink to="/notifications" className="flex flex-col items-center">
+          <CircleNotificationsIcon />
+          <p style={{ marginTop: "-3px" }}>Updates</p>
+        </NavLink>
+
+        <div className="flex flex-col items-center">
+          <SettingsIcon />
+          <p style={{ marginTop: "-3px" }}>Setting</p>
+        </div>
+
+        {profilePicture && (
+          <img
+            src={profilePicture}
+            alt="dp"
+            onClick={() => setDrawer(!drawer)}
+            className="cursor-pointer w-8 h-8 rounded-full"
+          />
+        )}
+        <InfoDrawer open={drawer} setOpen={setDrawer} />
+      </div>
     </div>
-  )
+  );
 }
 
 export default LeftIcons
