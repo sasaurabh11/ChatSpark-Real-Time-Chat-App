@@ -15,7 +15,6 @@ function UserConversation({ user }) {
             const recieveid = user.sub || user._id;
             const sendid = localAccount?._id || account?.sub;
             const data = await getConversation({ senderId: sendid, receiverId: recieveid });
-            console.log(data)
             setMessage({
                 text: data?.message,
                 translatedText: data?.translatedText,
