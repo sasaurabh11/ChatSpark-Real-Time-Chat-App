@@ -5,8 +5,14 @@ import { AccountContext } from "../../../ContextApi/AccountProvide";
 import { newMassage, getMessage } from "../../../Service/api";
 
 function Messages({ person, conversation }) {
-  const { account, localAccount, socket, newMessageFlag, setNewMessageFlage, selectedLang } =
-    useContext(AccountContext);
+  const {
+    account,
+    localAccount,
+    socket,
+    newMessageFlag,
+    setNewMessageFlage,
+    selectedLang,
+  } = useContext(AccountContext);
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [image, setImage] = useState("");
@@ -64,7 +70,11 @@ function Messages({ person, conversation }) {
     const getMessageDetails = async () => {
       if (conversation?._id) {
         const data = await getMessage(conversation._id);
-        setMessages(data);
+
+        setMessages((prev) => {
+          const optimistic = prev.filter((m) => !m._id);
+          return [...data, ...optimistic];
+        });
       }
     };
     getMessageDetails();
@@ -76,7 +86,7 @@ function Messages({ person, conversation }) {
     if (code === 13 && value.trim()) {
       const accountValue = account?.sub || localAccount?._id;
       const personValue = person?.sub || person?._id;
-
+      
       const message = {
         senderId: accountValue,
         selectedLang: selectedLang,
@@ -84,11 +94,15 @@ function Messages({ person, conversation }) {
         conversationId: conversation._id,
         type: file ? "file" : "text",
         text: file ? image : value,
+        createdAt: Date.now(),
+        self: true,
       };
 
-      socket.current.emit("sendMessage", message);
-      await newMassage(message);
+      setMessages((prev) => [...prev, message]);
 
+      socket.current.emit("sendMessage", message);
+
+      // Reset input
       setValue("");
       setFile(false);
       setImage("");

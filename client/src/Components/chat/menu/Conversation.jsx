@@ -58,8 +58,6 @@ function Conversation({ text }) {
                         <option value="">-- Choose Language --</option>
                         <option value="en">English</option>
                         <option value="hi">Hindi</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
                     </select>
                     <p className="text-gray-400 text-sm text-center">
                         Select your preferred language to continue

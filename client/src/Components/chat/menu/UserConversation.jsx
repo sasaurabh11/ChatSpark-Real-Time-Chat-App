@@ -7,13 +7,21 @@ function UserConversation({ user }) {
     const { setPerson, account, newMessageFlag, localAccount, activeUser, person } = useContext(AccountContext);
     const [message, setMessage] = useState({});
     const profilePicture = user?.picture || user?.profilePhoto;
+    const accountValue = account?.sub || localAccount?._id;
+    const isOwnMessage = accountValue === message?.senderId;
 
     useEffect(() => {
         const getConversationMessage = async() => {
             const recieveid = user.sub || user._id;
             const sendid = localAccount?._id || account?.sub;
             const data = await getConversation({ senderId: sendid, receiverId: recieveid });
-            setMessage({ text: data?.message, timestamp: data?.updatedAt });
+            console.log(data)
+            setMessage({
+                text: data?.message,
+                translatedText: data?.translatedText,
+                senderId: data?.senderId,
+                timestamp: data?.updatedAt
+            });
         };
         getConversationMessage();
     }, [newMessageFlag]);
@@ -49,8 +57,13 @@ function UserConversation({ user }) {
                 </div>
 
                 <p className="text-sm text-gray-400 truncate">
-                    {message?.text?.includes('localhost') ? '📷 Media' : message?.text || 'Start a new conversation'}
+                    {message?.text?.includes('localhost')
+                        ? '📷 Media'
+                        : isOwnMessage
+                            ? message?.text
+                            : message?.translatedText || message?.text || 'Start a new conversation'}
                 </p>
+
             </div>
         </div>
     );

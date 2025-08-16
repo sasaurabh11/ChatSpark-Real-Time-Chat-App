@@ -12,7 +12,7 @@ const io = new Server(server, {
     cors: {
         // origin: process.env.url,
         origin: [process.env.url, 'https://chat-spark-app.vercel.app'],
-    }, 
+    },
 })
 
 app.set("io", io);
@@ -24,10 +24,10 @@ app.use(cors({
 }))
 
 //middlewares
-app.use(express.json({limit: "16kb"}))
-app.use(express.urlencoded({extended: true, limit: "16kb"}))
+app.use(express.json({ limit: "16kb" }))
+app.use(express.urlencoded({ extended: true, limit: "16kb" }))
 app.use(express.static("Public"))
-app.use(cookieParser()) 
+app.use(cookieParser())
 
 //socket intialization
 let users = [];
@@ -54,20 +54,36 @@ io.on('connection', (socket) => {
     })
 
     //send message
-    socket.on('sendMessage', async(data) => {
-        const sourceLang = data.selectedLang || 'en'
+    socket.on('sendMessage', async (data) => {
+        const sourceLang = data.selectedLang || 'en';
         const user = getUser(data.receiverId);
-        if (!user) return;
 
-        const targetLang = user.preferredLang || 'en';
         let translatedText = data.text;
+        const targetLang = user?.preferredLang || 'en';
 
         if (targetLang !== sourceLang) {
-            translatedText = await translateText(translatedText, sourceLang, targetLang);
-            console.log(translatedText)
+            translatedText = await translateText(data.text, sourceLang, targetLang);
         }
-        io.to(user?.socketId).emit('getMessage', {...data, translatedText})
-    })
+
+        const messageToDeliver = {
+            ...data,
+            text: data.text,
+            translatedText,
+            createdAt: Date.now(),
+        };
+
+        if (user?.socketId) {
+            io.to(user.socketId).emit('getMessage', messageToDeliver);
+        }
+
+        setImmediate(async () => {
+            try {
+                await newMessage(messageToDeliver);
+            } catch (err) {
+                console.error("Error saving message:", err);
+            }
+        });
+    });
 
     //disconnect
     socket.on('disconnect', () => {
@@ -79,6 +95,7 @@ io.on('connection', (socket) => {
 
 //route import
 import adduser from './routes/user.router.js'
+import { newMessage } from './controllers/message.controller.js';
 
 //User routes declaration
 app.use("/api/v1/user", adduser)
