@@ -29,8 +29,11 @@ export default function CallProvider({ children }) {
   const [incomingCall, setIncomingCall] = useState(null);
   const [localStream, setLocalStream] = useState(null);
   const [remoteStreams, setRemoteStreams] = useState(new Map());
+  const [isCallStarter, setIsCallStarter] = useState(false);
   const pcMapRef = useRef(new Map());
   const pendingOffersRef = useRef(new Set());
+  const pendingPeersRef = useRef([]); 
+  const streamReadyNotifiedRef = useRef(false);
 
   const addRemoteStream = useCallback((socketId, stream) => {
     console.log("Adding remote stream for:", socketId, stream);
@@ -65,9 +68,25 @@ export default function CallProvider({ children }) {
   }, [localStream]);
 
   // Create peer connection
-  const ensurePeerConnection = useCallback(async (peerSocketId) => {
+  const ensurePeerConnection = useCallback(async (peerSocketId, stream) => {
     let pc = pcMapRef.current.get(peerSocketId);
-    if (pc) return pc;
+    if (pc) {
+      // If peer connection exists but stream changed, update tracks
+      if (stream) {
+        const existingSenders = pc.getSenders();
+        const streamTracks = stream.getTracks();
+        
+        // Add new tracks if not already present
+        streamTracks.forEach(track => {
+          const existingSender = existingSenders.find(s => s.track?.kind === track.kind);
+          if (!existingSender) {
+            console.log(`Adding ${track.kind} track to existing peer connection for:`, peerSocketId);
+            pc.addTrack(track, stream);
+          }
+        });
+      }
+      return pc;
+    }
 
     console.log("Creating peer connection for:", peerSocketId);
     pc = new RTCPeerConnection({ iceServers: STUN });
@@ -107,21 +126,21 @@ export default function CallProvider({ children }) {
     };
 
     // Add local tracks if we have them
-    if (localStream) {
-      localStream.getTracks().forEach((track) => {
+    if (stream) {
+      stream.getTracks().forEach((track) => {
         console.log(`Adding ${track.kind} track to peer connection for:`, peerSocketId);
-        pc.addTrack(track, localStream);
+        pc.addTrack(track, stream);
       });
     }
 
     pcMapRef.current.set(peerSocketId, pc);
     return pc;
-  }, [localStream, socket, addRemoteStream, removeRemoteStream]);
+  }, [socket, addRemoteStream, removeRemoteStream]);
 
-  // Create offer
-  const createPeerConnectionAndOffer = useCallback(async (peerSocketId, rId) => {
-    if (!localStream || !socket?.current) {
-      console.log("Cannot create offer - missing localStream or socket");
+  // Create offer with delay for stream readiness
+  const createPeerConnectionAndOffer = useCallback(async (peerSocketId, rId, stream, maxRetries = 3) => {
+    if (!stream || !socket?.current) {
+      console.log("Cannot create offer - missing stream or socket");
       return;
     }
 
@@ -131,10 +150,13 @@ export default function CallProvider({ children }) {
     }
 
     try {
-      console.log("Creating offer for:", peerSocketId);
+      console.log("Creating offer for:", peerSocketId, "with stream tracks:", stream.getTracks().map(t => t.kind));
       pendingOffersRef.current.add(peerSocketId);
       
-      const pc = await ensurePeerConnection(peerSocketId);
+      // Wait a bit to ensure the other peer has joined and is ready
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const pc = await ensurePeerConnection(peerSocketId, stream);
       const offer = await pc.createOffer({
         offerToReceiveAudio: true,
         offerToReceiveVideo: true
@@ -152,7 +174,33 @@ export default function CallProvider({ children }) {
       console.error("Error creating offer:", error);
       pendingOffersRef.current.delete(peerSocketId);
     }
-  }, [localStream, socket, ensurePeerConnection]);
+  }, [socket, ensurePeerConnection]);
+
+  // Notify about stream readiness
+  const notifyStreamReady = useCallback(() => {
+    if (localStream && roomId && socket?.current && !streamReadyNotifiedRef.current) {
+      console.log("Notifying room about stream readiness");
+      socket.current.emit("webrtc:stream-ready", { roomId, socketId: socket.current.id });
+      streamReadyNotifiedRef.current = true;
+    }
+  }, [localStream, roomId, socket]);
+
+  // Process pending peers when local stream becomes available
+  const processPendingPeers = useCallback(async (stream) => {
+    if (pendingPeersRef.current.length > 0 && stream) {
+      console.log("Processing pending peers with local stream:", pendingPeersRef.current);
+      
+      // Add delay to ensure peers are ready
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const peers = [...pendingPeersRef.current];
+      pendingPeersRef.current = [];
+      
+      for (const { peerId, rId } of peers) {
+        await createPeerConnectionAndOffer(peerId, rId, stream);
+      }
+    }
+  }, [createPeerConnectionAndOffer]);
 
   // Socket event handlers
   useEffect(() => {
@@ -161,29 +209,57 @@ export default function CallProvider({ children }) {
 
     const onExistingPeers = async ({ roomId: rId, peers }) => {
       console.log("Existing peers in room:", peers);
+      console.log("I am call starter:", isCallStarter);
+      console.log("Current local stream:", localStream);
+      
       if (!localStream) {
-        console.log("No local stream yet, waiting...");
+        console.log("No local stream yet, storing peers for later processing");
+        pendingPeersRef.current = peers.map(({ socketId }) => ({ peerId: socketId, rId }));
         return;
       }
       
-      for (const { socketId: peerId } of peers) {
-        await createPeerConnectionAndOffer(peerId, rId);
+      // If I'm the call starter, wait a bit longer for peers to be ready
+      if (isCallStarter && peers.length > 0) {
+        console.log("As call starter, creating offers to existing peers with delay");
+        setTimeout(async () => {
+          for (const { socketId: peerId } of peers) {
+            await createPeerConnectionAndOffer(peerId, rId, localStream);
+          }
+        }, 3000); // Increased delay for call starter
       }
     };
 
     const onUserJoined = async ({ roomId: rId, socketId: peerId }) => {
       console.log("User joined room:", peerId);
+      console.log("Current local stream:", localStream);
+      
       if (!localStream) {
-        console.log("No local stream yet, cannot create offer");
+        console.log("No local stream yet, storing peer for later processing");
+        pendingPeersRef.current.push({ peerId, rId });
         return;
       }
-      await createPeerConnectionAndOffer(peerId, rId);
+      
+      // Wait for the new joiner to get their stream ready
+      console.log("Creating offer to new joiner with delay:", peerId);
+      setTimeout(async () => {
+        await createPeerConnectionAndOffer(peerId, rId, localStream);
+      }, 2000);
+    };
+
+    const onStreamReady = async ({ roomId: rId, socketId: readySocketId }) => {
+      console.log("Peer stream ready:", readySocketId);
+      
+      // If we have a local stream and this peer is ready, create offer to them
+      if (localStream && readySocketId !== s.id) {
+        console.log("Creating offer to stream-ready peer:", readySocketId);
+        await createPeerConnectionAndOffer(readySocketId, rId, localStream);
+      }
     };
 
     const onOffer = async ({ from, roomId: rId, description }) => {
       console.log("Received offer from:", from);
       try {
-        const pc = await ensurePeerConnection(from);
+        const pc = await ensurePeerConnection(from, localStream);
         await pc.setRemoteDescription(new RTCSessionDescription(description));
         
         const answer = await pc.createAnswer();
@@ -239,6 +315,7 @@ export default function CallProvider({ children }) {
       }
       removeRemoteStream(socketId);
       pendingOffersRef.current.delete(socketId);
+      pendingPeersRef.current = pendingPeersRef.current.filter(p => p.peerId !== socketId);
     };
 
     const onIncomingCall = (payload) => {
@@ -253,6 +330,7 @@ export default function CallProvider({ children }) {
 
     s.on("webrtc:existing-peers", onExistingPeers);
     s.on("webrtc:user-joined", onUserJoined);
+    s.on("webrtc:stream-ready", onStreamReady);
     s.on("webrtc:offer", onOffer);
     s.on("webrtc:answer", onAnswer);
     s.on("webrtc:ice-candidate", onIce);
@@ -263,6 +341,7 @@ export default function CallProvider({ children }) {
     return () => {
       s.off("webrtc:existing-peers", onExistingPeers);
       s.off("webrtc:user-joined", onUserJoined);
+      s.off("webrtc:stream-ready", onStreamReady);
       s.off("webrtc:offer", onOffer);
       s.off("webrtc:answer", onAnswer);
       s.off("webrtc:ice-candidate", onIce);
@@ -270,22 +349,28 @@ export default function CallProvider({ children }) {
       s.off("webrtc:incoming-call", onIncomingCall);
       s.off("webrtc:call-ended", onCallEnded);
     };
-  }, [socket, localStream, ensurePeerConnection, createPeerConnectionAndOffer, removeRemoteStream]);
+  }, [socket, localStream, isCallStarter, ensurePeerConnection, createPeerConnectionAndOffer, removeRemoteStream]);
 
-  // When localStream is available, handle existing peers
+  // Notify about stream readiness when local stream is available
   useEffect(() => {
-    if (localStream && inCall && roomId) {
-      console.log("Local stream ready, checking for existing peers to connect");
-      // Re-emit join room to trigger peer connections
-      socket?.current?.emit("webrtc:join-room", { roomId, user: me });
+    if (localStream && inCall) {
+      notifyStreamReady();
+      
+      // Process any pending peers
+      if (pendingPeersRef.current.length > 0) {
+        console.log("Local stream available, processing pending peers");
+        processPendingPeers(localStream);
+      }
     }
-  }, [localStream, inCall, roomId, socket, me]);
+  }, [localStream, inCall, notifyStreamReady, processPendingPeers]);
 
   // Functions
-  const joinRoom = useCallback(async (rId) => {
+  const joinRoom = useCallback(async (rId, starter = false) => {
     try {
-      console.log("Joining room:", rId);
+      console.log("Joining room:", rId, "as starter:", starter);
       setRoomId(rId);
+      setIsCallStarter(starter);
+      streamReadyNotifiedRef.current = false; // Reset notification flag
       
       // Get local stream first
       const stream = await ensureLocalStream();
@@ -300,13 +385,14 @@ export default function CallProvider({ children }) {
       console.error("Error joining room:", error);
       setRoomId(null);
       setInCall(false);
+      setIsCallStarter(false);
       alert("Failed to access camera/microphone. Please check permissions.");
     }
   }, [ensureLocalStream, socket, me]);
 
   const startCall = useCallback((rId) => {
     console.log("Starting call for room:", rId);
-    joinRoom(rId).then(() => {
+    joinRoom(rId, true).then(() => {
       if (socket?.current) {
         console.log("Emitting start-call event");
         socket.current.emit("webrtc:start-call", { roomId: rId, fromUser: me });
@@ -319,7 +405,7 @@ export default function CallProvider({ children }) {
   const acceptCall = useCallback((payload) => {
     console.log("Accepting call:", payload);
     setIncomingCall(null);
-    joinRoom(payload.roomId);
+    joinRoom(payload.roomId, false); // Not the call starter
   }, [joinRoom]);
 
   const declineCall = useCallback(() => {
@@ -346,6 +432,8 @@ export default function CallProvider({ children }) {
     }
     pcMapRef.current.clear();
     pendingOffersRef.current.clear();
+    pendingPeersRef.current = [];
+    streamReadyNotifiedRef.current = false;
 
     // Stop local media
     if (localStream) {
@@ -366,6 +454,7 @@ export default function CallProvider({ children }) {
     setInCall(false);
     setRoomId(null);
     setIncomingCall(null);
+    setIsCallStarter(false);
   }, [localStream, roomId, socket]);
 
   // Media controls
@@ -431,6 +520,7 @@ export default function CallProvider({ children }) {
     incomingCall,
     localStream,
     remoteStreams,
+    isCallStarter,
     startCall,
     acceptCall,
     declineCall,

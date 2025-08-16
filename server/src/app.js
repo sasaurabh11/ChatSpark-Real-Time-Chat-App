@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
         // Initialize room if it doesn't exist
         if (!rooms.has(roomId)) {
             rooms.set(roomId, {});
-            callSessions.set(roomId, { participants: [], status: 'waiting' });
+            callSessions.set(roomId, { participants: [], status: 'waiting', callStarter: null });
         }
 
         const room = rooms.get(roomId);
@@ -133,7 +133,8 @@ io.on('connection', (socket) => {
             userId: user?.id, 
             name: user?.name, 
             preferredLang: user?.preferredLang,
-            joinedAt: Date.now()
+            joinedAt: Date.now(),
+            streamReady: false // Track stream readiness
         };
 
         // Add to call session
@@ -155,7 +156,7 @@ io.on('connection', (socket) => {
                 user: room[socketId]
             }));
 
-        // Tell the joiner about existing peers ONLY if there are any
+        // Tell the joiner about existing peers
         if (existingPeers.length > 0) {
             console.log(`📤 Sending ${existingPeers.length} existing peers to ${socket.id}`);
             socket.emit('webrtc:existing-peers', { 
@@ -179,6 +180,45 @@ io.on('connection', (socket) => {
         // Update call session status
         if (participantCount >= 2) {
             session.status = 'active';
+        }
+    });
+
+    // Handle stream readiness notification
+    socket.on('webrtc:stream-ready', ({ roomId, socketId }) => {
+        console.log(`🎥 Stream ready notification from ${socketId} in room ${roomId}`);
+        
+        const room = rooms.get(roomId);
+        if (room && room[socketId]) {
+            room[socketId].streamReady = true;
+            
+            // Notify all other participants in the room
+            socket.to(roomId).emit('webrtc:stream-ready', {
+                roomId,
+                socketId
+            });
+            
+            console.log(`📢 Broadcasted stream-ready for ${socketId} to room ${roomId}`);
+        }
+    });
+
+    // Handle request for existing peers (for call starters)
+    socket.on('webrtc:request-peers', ({ roomId }) => {
+        const room = rooms.get(roomId);
+        if (!room) return;
+
+        const existingPeers = Object.keys(room)
+            .filter(socketId => socketId !== socket.id)
+            .map(socketId => ({
+                socketId,
+                user: room[socketId]
+            }));
+
+        if (existingPeers.length > 0) {
+            console.log(`🔄 Re-sending ${existingPeers.length} existing peers to call starter ${socket.id}`);
+            socket.emit('webrtc:existing-peers', { 
+                roomId, 
+                peers: existingPeers 
+            });
         }
     });
 
@@ -223,6 +263,7 @@ io.on('connection', (socket) => {
         const session = callSessions.get(roomId);
         if (session) {
             session.status = 'active';
+            session.callStarter = socket.id; // Mark who started the call
         }
 
         // Notify all other participants in the room about incoming call
@@ -235,7 +276,28 @@ io.on('connection', (socket) => {
             });
         });
         
-        console.log(`📱 Notified ${otherParticipants.length} participants about incoming call`);
+        console.log(`📱 Notified ${otherParticipants.length} participants about incoming call from ${socket.id}`);
+        
+        // Give more time for the call starter to be ready, then trigger peer connections
+        setTimeout(() => {
+            const currentRoom = rooms.get(roomId);
+            if (currentRoom && currentRoom[socket.id]) {
+                const peersForStarter = Object.keys(currentRoom)
+                    .filter(id => id !== socket.id)
+                    .map(socketId => ({
+                        socketId,
+                        user: currentRoom[socketId]
+                    }));
+                
+                if (peersForStarter.length > 0) {
+                    console.log(`🔄 Triggering peer connections for call starter ${socket.id}`);
+                    socket.emit('webrtc:existing-peers', { 
+                        roomId, 
+                        peers: peersForStarter 
+                    });
+                }
+            }
+        }, 2000); // Increased delay
     });
 
     socket.on('webrtc:end-call', ({ roomId }) => {
@@ -247,7 +309,15 @@ io.on('connection', (socket) => {
         const session = callSessions.get(roomId);
         if (session) {
             session.status = 'ended';
+            session.callStarter = null;
         }
+
+        // Reset stream ready status for all participants
+        Object.keys(room).forEach(socketId => {
+            if (room[socketId]) {
+                room[socketId].streamReady = false;
+            }
+        });
 
         // Notify all other participants that call has ended
         const otherParticipants = Object.keys(room).filter(id => id !== socket.id);
@@ -275,6 +345,9 @@ io.on('connection', (socket) => {
         const session = callSessions.get(roomId);
         if (session) {
             session.participants = session.participants.filter(id => id !== socket.id);
+            if (session.callStarter === socket.id) {
+                session.callStarter = null;
+            }
             if (session.participants.length < 2) {
                 session.status = 'waiting';
             }
@@ -315,6 +388,9 @@ io.on('connection', (socket) => {
                 const session = callSessions.get(roomId);
                 if (session) {
                     session.participants = session.participants.filter(id => id !== socket.id);
+                    if (session.callStarter === socket.id) {
+                        session.callStarter = null;
+                    }
                     if (session.participants.length < 2) {
                         session.status = 'waiting';
                     }
@@ -348,6 +424,7 @@ io.on('connection', (socket) => {
             socketId: socket.id
         });
     });
+
 })
 
 //route import
