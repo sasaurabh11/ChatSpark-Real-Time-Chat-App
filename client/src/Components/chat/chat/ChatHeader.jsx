@@ -14,32 +14,34 @@ function ChatHeader({ person }) {
   });
 
   return (
-    <div className="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700 shadow-sm">
+    <div className="flex items-center justify-between p-2 bg-gray-800 border-b border-gray-700 shadow-sm">
       {/* Left side - User info */}
-      <div className="flex items-center space-x-4">
-        <div className="relative">
+      <div className="flex items-center min-w-0">
+        <div className="relative flex-shrink-0 mr-2">
           <img 
             src={personPhoto} 
             alt="Profile" 
-            className="w-12 h-12 rounded-full object-cover border-2 border-gray-600"
+            className="w-9 h-9 rounded-full object-cover border border-gray-600"
             onError={(e) => {
               e.target.onerror = null; 
               e.target.src = "/default-avatar.png";
             }}
           />
-          <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-gray-800 ${
+          <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border border-gray-800 ${
             isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-500'
           }`}></div>
         </div>
         
-        <div>
-          <h3 className="font-semibold text-white text-lg">{person?.name}</h3>
-          <p className={`text-xs font-medium ${
+        <div className="min-w-0">
+          <h3 className="font-medium text-white text-sm truncate">
+            {person?.name}
+          </h3>
+          <p className={`text-[11px] font-medium ${
             isActive ? 'text-green-400' : 'text-gray-400'
           }`}>
             {isActive ? (
               <span className="flex items-center">
-                <span className="w-2 h-2 rounded-full bg-green-400 mr-1.5"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 mr-1"></span>
                 Online
               </span>
             ) : (
@@ -49,18 +51,15 @@ function ChatHeader({ person }) {
         </div>
       </div>
 
-      {/* Center - Call buttons */}
-      <div className="flex items-center space-x-2">
-        <CallButtons />
-      </div>
-
       {/* Right side - Action buttons */}
-      <div className="flex items-center space-x-2">
-        <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-all duration-200 transform hover:scale-105">
-          <Search className="text-xl" />
+      <div className="flex items-center space-x-1">
+        <CallButtons className="hidden xs:flex" />
+        
+        <button className="p-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors">
+          <Search className="text-base" />
         </button>
-        <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-all duration-200 transform hover:scale-105">
-          <MoreVert className="text-xl" />
+        <button className="p-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors">
+          <MoreVert className="text-base" />
         </button>
       </div>
     </div>

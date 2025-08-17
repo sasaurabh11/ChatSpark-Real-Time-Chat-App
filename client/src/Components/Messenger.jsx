@@ -19,14 +19,12 @@ const Messenger = () => {
         </div>
       ) : (
         // Login Interface
-        <div className="flex flex-col items-center justify-center min-h-screen p-4">
-          
-          <div className="w-full max-w-md mt-8 p-8 bg-gray-800 rounded-lg shadow-xl">
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow flex items-center justify-center p-4">
             <LoginBox />
           </div>
-          
-          <footer className="mt-12 text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} Messenger. All rights reserved.</p>
+          <footer className="py-4 text-gray-500 text-sm text-center">
+            <p>© {new Date().getFullYear()} Chatspark. Made with ❤️ by Saurabh.</p>
           </footer>
         </div>
       )}

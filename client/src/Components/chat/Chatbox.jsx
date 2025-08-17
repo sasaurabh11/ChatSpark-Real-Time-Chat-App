@@ -3,18 +3,16 @@ import Menu from "./menu/Menu";
 import Emptychat from "./chat/Emptychat";
 import LeftIcons from "./leftIcons/LeftIcons";
 import RightPersonDrawer from "./RightDrawer/RightPersonDrawer";
-import { useContext } from "react";
-import { AccountContext } from "../../ContextApi/AccountProvide";
 import ChatUser from "./chat/ChatUser";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AccountContext } from "../../ContextApi/AccountProvide";
 
 function Chatbox() {
   const { person } = useContext(AccountContext);
   const [showMenu, setShowMenu] = useState(true);
 
   return (
-    // Remove Dialog and use a fixed positioned div instead
-    <div className="fixed inset-4 flex bg-gray-900 text-gray-100 rounded-lg border border-gray-700 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 flex bg-gray-900 text-gray-100 overflow-hidden">
       {/* Left Icons Sidebar */}
       <div className="w-16 bg-gray-800 border-r border-gray-700 flex flex-col items-center py-4 flex-shrink-0">
         <LeftIcons toggleMenu={() => setShowMenu((prev) => !prev)} />
@@ -22,8 +20,8 @@ function Chatbox() {
 
       {/* Menu/Contacts Section */}
       {showMenu && (
-        <div className="hidden md:flex w-80 bg-gray-800 border-r border-gray-700 flex-col flex-shrink-0">
-          <Menu />
+        <div className="absolute inset-y-0 left-16 w-64 bg-gray-800 border-r border-gray-700 flex-col flex-shrink-0 z-20 md:static md:w-80">
+          <Menu setShowMenu={setShowMenu} />
         </div>
       )}
 

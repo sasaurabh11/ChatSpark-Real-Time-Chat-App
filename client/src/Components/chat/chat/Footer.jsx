@@ -47,47 +47,31 @@ const Footer = ({ sendText, value, setValue, setFile, setImage, file }) => {
   };
 
   return (
-    <div className="flex items-center p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-sm">
-      {/* Emoji Button */}
-      <button
-        className="p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-        aria-label="Emoji picker"
-      >
-        <EmojiEmotions fontSize="small" />
-      </button>
+    <div className="flex items-center p-2 md:p-3 bg-gray-800 border-t border-gray-700 shadow-sm">
+      {/* Left buttons */}
+      <div className="flex items-center space-x-1 md:space-x-2">
+        <button className="p-1 md:p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors duration-200">
+          <EmojiEmotions fontSize="small" />
+        </button>
 
-      {/* File Attachment Button */}
-      <label className="p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer">
-        <AttachFile fontSize="small" className="transform rotate-45" />
-        <input
-          type="file"
-          className="hidden"
-          onChange={onFileChange}
-          accept="image/*, .pdf"
-          aria-label="Attach file"
-        />
-      </label>
+        <label className="p-1 md:p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors duration-200 cursor-pointer">
+          <AttachFile fontSize="small" className="transform rotate-45" />
+          <input
+            type="file"
+            className="hidden"
+            onChange={onFileChange}
+            accept="image/*, .pdf"
+          />
+        </label>
+      </div>
 
-      {/* Language Toggle Button - Moved outside input */}
-      <button
-        onClick={() => setIsTransliterationOn(!isTransliterationOn)}
-        className={`p-2 mx-1 text-xs font-medium rounded-full ${
-          isTransliterationOn
-            ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30"
-            : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-        } transition-colors duration-200 min-w-[36px]`}
-        aria-label={isTransliterationOn ? "Switch to English" : "Switch to Hindi"}
-      >
-        {isTransliterationOn ? "हिं" : "EN"}
-      </button>
-
-      {/* Message Input */}
-      <div className="flex-1 mx-2">
+      {/* Input field */}
+      <div className="flex-1 mx-1 md:mx-2">
         <div className="relative">
           <ReactTransliterate
             type="text"
             placeholder="Type a message..."
-            className="w-full py-2.5 px-4 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-12 transition-all duration-200 border border-gray-200 dark:border-gray-600"
+            className="w-full py-2 px-3 md:py-2.5 md:px-4 bg-gray-700 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-10 md:pr-12 transition-all duration-200 border border-gray-600 text-sm md:text-base"
             value={value}
             onChangeText={(val) => {
               setValue(val);
@@ -95,32 +79,28 @@ const Footer = ({ sendText, value, setValue, setFile, setImage, file }) => {
             }}
             lang={isTransliterationOn ? "hi" : "en"}
             onKeyPress={handleKeyPress}
-            containerClassName="transliterate-container relative"
-            dropdownClassName="react-transliterate-dropdown w-full bg-white dark:bg-gray-800 shadow-lg rounded-md border border-gray-200 dark:border-gray-700 z-50 max-h-60 overflow-y-auto"
-            
           />
 
+          {/* Language toggle */}
+          <button
+            onClick={() => setIsTransliterationOn(!isTransliterationOn)}
+            className={`absolute right-10 md:right-12 top-1/2 transform -translate-y-1/2 text-xs px-1.5 py-0.5 rounded ${
+              isTransliterationOn
+                ? "text-indigo-400 bg-indigo-900/30"
+                : "text-gray-400"
+            }`}
+          >
+            {isTransliterationOn ? "हिं" : "EN"}
+          </button>
+
+          {/* Send button */}
           <button
             onClick={isTyping ? sendText : null}
-            className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-1 transition-all duration-200 ${
-              isTyping
-                ? "text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300"
-                : "text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+            className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-1 ${
+              isTyping ? "text-indigo-400" : "text-gray-500"
             }`}
-            onMouseEnter={() => setIsHoveringSend(true)}
-            onMouseLeave={() => setIsHoveringSend(false)}
-            aria-label={isTyping ? "Send message" : "Voice message"}
           >
-            {isTyping ? (
-              <Send
-                fontSize="small"
-                className={`transition-transform duration-200 ${
-                  isHoveringSend ? "scale-110" : "scale-100"
-                }`}
-              />
-            ) : (
-              <Mic fontSize="small" />
-            )}
+            {isTyping ? <Send fontSize="small" /> : <Mic fontSize="small" />}
           </button>
         </div>
       </div>

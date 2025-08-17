@@ -65,12 +65,13 @@ function RightPersonDrawer({ onClose }) {
                 <Divider className="bg-gray-700 my-4" />
 
                 {/* Action Buttons */}
-                <div className="flex flex-col md:flex-row gap-3 pt-4">
-                    <button className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200 shadow-md hover:shadow-indigo-500/20">
+                <div className="flex flex-col space-y-3 pt-4">
+                    <button className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200">
                         Message
                     </button>
-                    <div className="flex justify-center">
-                        <CallButtons compact />
+                    
+                    <div className="flex flex-col space-y-2 bg-gray-700/50 p-3 rounded-lg">
+                        <CallButtons />
                     </div>
                 </div>
             </div>
