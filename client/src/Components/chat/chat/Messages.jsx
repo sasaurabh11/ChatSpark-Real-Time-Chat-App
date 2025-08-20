@@ -83,7 +83,8 @@ function Messages({ person, conversation }) {
   // Send message handler
   const sendText = async (e) => {
     const code = e.keyCode || e.which;
-    if (code === 13 && value.trim()) {
+    if ((e.keyCode === 13 || e.which === 13 || e.type === 'click') && value.trim()) {
+      console.log("here")
       const accountValue = account?.sub || localAccount?._id;
       const personValue = person?.sub || person?._id;
       

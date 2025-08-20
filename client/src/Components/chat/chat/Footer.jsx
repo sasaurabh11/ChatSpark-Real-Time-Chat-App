@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { EmojiEmotions, AttachFile, Mic, Send } from "@mui/icons-material";
 import { ReactTransliterate } from "react-transliterate";
 import "react-transliterate/dist/index.css";
@@ -45,6 +45,11 @@ const Footer = ({ sendText, value, setValue, setFile, setImage, file }) => {
       sendText(e);
     }
   };
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    sendText(e);
+  }
 
   return (
     <div className="flex items-center p-2 md:p-3 bg-gray-800 border-t border-gray-700 shadow-sm">
@@ -100,7 +105,7 @@ const Footer = ({ sendText, value, setValue, setFile, setImage, file }) => {
               isTyping ? "text-indigo-400" : "text-gray-500"
             }`}
           >
-            {isTyping ? <Send fontSize="small" /> : <Mic fontSize="small" />}
+            {isTyping ? <Send onClick={sendMessage} fontSize="small" /> : <Mic fontSize="small" />}
           </button>
         </div>
       </div>
